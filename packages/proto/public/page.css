@@ -5,20 +5,23 @@ body {
 }
 
 h1 {
-    background-color: purple;
-    color: gold;
+    background-color: var(--color-background-header);
+    color: var(--color-text-first-heading);
     text-align: center;
     padding: 10px;
     border-radius: 8px;
 }
 
 h2 {
-    color: purple;
+    display: inline-block;
+    background-color: var(--color-background-card);
+    color: var(--color-text-second-heading);
     margin-top: 20px;
+    border-radius: 8px;
 }
 
 p {
-    color: #333;
+    color: var(--color-text);
 }
 
 ul {
@@ -30,7 +33,7 @@ li {
 }
 
 a {
-    color: purple;
+    color: var(--color-accent);
     text-decoration: none;
     font-weight: bold;
 }

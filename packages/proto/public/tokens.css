@@ -1,11 +1,12 @@
 :root {
-  --color-accent: ;
+  --color-accent: Purple;
+  --color-text-first-heading: gold;
 
-  --color-background-header: ;
-  --color-background-page: ;
-  --color-background-card: ;
+  --color-background-header: purple;
+  --color-background-page: white;
+  --color-background-card: gold;
 
-  --color-text: ;
-  --color-text-heading: ;
-  --color-text-inverted: ;
+  --color-text: black;
+  --color-text-second-heading: Purple;
+  --color-text-inverted: #E6E6FA;
 }
