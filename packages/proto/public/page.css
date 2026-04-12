@@ -4,6 +4,10 @@ body {
     margin: 20px;
 }
 
+h1, h2 {
+    font-family: 'Playfair Display', serif;
+}
+
 h1 {
     background-color: var(--color-background-header);
     color: var(--color-text-first-heading);
