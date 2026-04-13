@@ -1,5 +1,5 @@
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Inter', Arial, sans-serif;
     background-color: var(--color-background-page);
     margin: 20px;
 }
@@ -44,4 +44,12 @@ a {
 
 a:hover {
     text-decoration: underline;
+}
+
+svg.icon {
+  display: inline;
+  height: 2em;
+  width: 2em;
+  vertical-align: top;
+  fill: currentColor;
 }
