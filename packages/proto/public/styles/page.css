@@ -3,6 +3,16 @@ body {
     background-color: var(--color-background-page);
 }
 
+@media (max-width: 600px) {
+    .layout {
+        padding: 1rem;
+    }
+
+    .content {
+        grid-template-columns: 1fr;
+    }
+}
+
 .header {
     display: flex;
     justify-content: center;
