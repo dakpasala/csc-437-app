@@ -1,7 +1,37 @@
 body {
     font-family: 'Inter', Arial, sans-serif;
     background-color: var(--color-background-page);
-    margin: 20px;
+}
+
+.header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    padding: 1rem;
+    background-color: var(--color-background-header);
+}
+
+.layout {
+    display: grid;
+    grid-template-columns: 1fr;
+    padding: 1.5rem;
+}
+
+.content {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
+}
+
+.card {
+    background-color: var(--color-background-card);
+    padding: 1rem;
+    border-radius: 8px;
+
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
 }
 
 h1, h2 {
@@ -9,19 +39,11 @@ h1, h2 {
 }
 
 h1 {
-    background-color: var(--color-background-header);
     color: var(--color-text-first-heading);
-    text-align: center;
-    padding: 10px;
-    border-radius: 8px;
 }
 
 h2 {
-    display: inline-block;
-    background-color: var(--color-background-card);
     color: var(--color-text-second-heading);
-    margin-top: 20px;
-    border-radius: 8px;
 }
 
 p {
@@ -33,7 +55,7 @@ ul {
 }
 
 li {
-    margin: 5px 0;
+    margin: 0.25rem 0;
 }
 
 a {
