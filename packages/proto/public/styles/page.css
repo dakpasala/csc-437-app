@@ -3,6 +3,15 @@ body {
     background-color: var(--color-background-page);
 }
 
+body.dark-mode {
+  --color-background-page: black;
+  --color-background-card: purple;
+  --color-text: white;
+  --color-text-first-heading: gold;   
+  --color-text-second-heading: gold; 
+  --color-accent: gold;
+}
+
 @media (max-width: 600px) {
     .layout {
         padding: 1rem;
@@ -66,6 +75,7 @@ ul {
 
 li {
     margin: 0.25rem 0;
+    color: var(--color-text);
 }
 
 a {

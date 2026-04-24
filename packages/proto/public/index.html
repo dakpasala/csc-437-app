@@ -13,6 +13,27 @@
         <link rel="stylesheet" href="./styles/page.css" />
     </head>
     <body>
+        <script>
+            document.body.addEventListener(
+                "dark-mode:toggle",
+                (event) => {
+                    const page = event.currentTarget;
+                    const checked = event.detail.checked;
+                    page.classList.toggle("dark-mode", checked);
+                }
+            );
+
+            function toggleDarkMode(target, checked) {
+                const customEvent = new CustomEvent(
+                    "dark-mode:toggle", {
+                        bubbles: true,
+                        detail: { checked },
+                    }
+                );
+
+                document.body.dispatchEvent(customEvent);
+            }
+        </script>
         <header class="header">
             <h1>
                 <svg class="icon">
@@ -20,6 +41,11 @@
                 </svg>
                 Los Angeles Lakers
             </h1>
+
+            <label>
+                <input type="checkbox" onchange="toggleDarkMode(event.target.checked)" />
+                Dark mode
+            </label>
         </header>
 
         <main class="layout">
