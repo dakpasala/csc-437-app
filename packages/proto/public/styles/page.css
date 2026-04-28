@@ -43,14 +43,8 @@ body.dark-mode {
     gap: 1rem;
 }
 
-.card {
-    background-color: var(--color-background-card);
-    padding: 1rem;
-    border-radius: 8px;
-
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
+lakers-card {
+    justify-content: stretch;
 }
 
 h1, h2 {

@@ -11,6 +11,25 @@
         <link rel="stylesheet" href="./styles/reset.css"/>
         <link rel="stylesheet" href="./styles/tokens.css"/>
         <link rel="stylesheet" href="./styles/page.css" />
+
+        <script type="importmap">
+            {
+                "imports" : {
+                    "@unbndl/html" : "https://unpkg.com/@unbndl/html"
+                }
+            }
+        </script>
+
+        <script type="module">
+            import { define } from "@unbndl/html";
+            import { LakersCardElement } from "./src/lakers-card.js";
+
+            define({
+                "lakers-card": LakersCardElement
+            });
+        </script>
+
+
     </head>
     <body>
         <script>
@@ -51,19 +70,22 @@
         <main class="layout">
             <section class="content">
 
-                <div class="card">
-                    <h2>Coach</h2>
-                    <p>JJ Redick</p>
-                </div>
+                <lakers-card>
+                    <h2 slot="title">Coach</h2>
+                    <p slot="content">JJ Redick</p>
+                </lakers-card>
 
-                <div class="card">
-                    <h2>Conference</h2>
-                    <p>Western Conference</p>
-                </div>
+            
 
-                <div class="card">
-                    <h2>Players</h2>
-                    <ul>
+                <lakers-card>
+                    <h2 slot="title">Conference</h2>
+                    <p slot="content">Western Conference</p>
+                </lakers-card>
+
+                <lakers-card>
+                    <h2 slot="title">Players</h2>
+
+                    <ul slot="content">
                         <li><a href="player.html">LeBron James</a></li>
                         <li>Luka Doncic</li>
                         <li>Austin Reaves</li>
@@ -81,11 +103,11 @@
                         <li>Kobe Bufkin</li>
                         <li>Dalton Knecht</li>
                     </ul>
-                </div> 
+                </lakers-card>
 
-                <div class="card">
-                    <h2>Games</h2>
-                    <ul>
+                <lakers-card>
+                    <h2 slot="title">Games</h2>
+                    <ul slot="content">
                         <li><a href="game.html">Lakers vs Celtics</a></li>
                         <li>Lakers vs Warriors</li>
                         <li>Lakers @ Thunder</li>
@@ -94,16 +116,16 @@
                         <li>Lakers @ Knicks</li>
                         <li>Lakers vs Hawks</li>
                     </ul>
-                </div>
+                </lakers-card>
 
-                <div class="card">
-                    <h2>
+                <lakers-card>
+                    <h2 slot="title">
                         <svg class="icon">
                             <use href="./icons/icons.svg#icon-championship" />
                         </svg>
                         Championships
                     </h2>
-                    <ul>
+                    <ul slot="content">
                         <li><a href="chip.html">2019-2020</a></li>
                         <li>2009-2010</li>
                         <li>2008-2009</li>
@@ -122,7 +144,7 @@
                         <li>1949-1950</li>
                         <li>1948-1949</li>
                     </ul>
-                </div>
+                </lakers-card>
 
             </section>
         </main>
