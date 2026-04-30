@@ -34,43 +34,6 @@
 
     </head>
     <body>
-
-        <script>
-            document.body.addEventListener(
-                "dark-mode:toggle",
-                (event) => {
-                    const page = event.currentTarget;
-                    const checked = event.detail.checked;
-                    page.classList.toggle("dark-mode", checked);
-                }
-            );
-
-            function toggleDarkMode(target, checked) {
-                const customEvent = new CustomEvent(
-                    "dark-mode:toggle", {
-                        bubbles: true,
-                        detail: { checked },
-                    }
-                );
-
-                document.body.dispatchEvent(customEvent);
-            }
-
-            // const checkbox = document.querySelector("input[type='checkbox']");
-
-            // checkbox.addEventListener("change", (event) => {
-            //     const checked = event.target.checked;
-
-            //     const customEvent = new CustomEvent("dark-mode:toggle", {
-            //         bubbles: true,
-            //         detail: { checked }
-            //     });
-
-            //     document.body.dispatchEvent(customEvent);
-            // });
-
-        </script>
-        
         <header class="header">
             <h1>
                 <svg class="icon">
@@ -82,15 +45,51 @@
                 </svg>
             </h1>
 
-            <label>
+            <!-- <label>
                 <input type="checkbox" onchange="toggleDarkMode(event.target.checked)" />
                 Dark mode
-            </label>
-
-            <!-- <label>
-                <input type="checkbox"/> Dark Mode
             </label> -->
+
+            <label>
+                <input type="checkbox"/> Dark Mode
+            </label>
         </header>
+
+        <script>
+            document.body.addEventListener(
+                "dark-mode:toggle",
+                (event) => {
+                    const page = event.currentTarget;
+                    const checked = event.detail.checked;
+                    page.classList.toggle("dark-mode", checked);
+                }
+            );
+
+            // function toggleDarkMode(target, checked) {
+            //     const customEvent = new CustomEvent(
+            //         "dark-mode:toggle", {
+            //             bubbles: true,
+            //             detail: { checked },
+            //         }
+            //     );
+
+            //     document.body.dispatchEvent(customEvent);
+            // }
+
+            const checkbox = document.querySelector("input[type='checkbox']");
+
+            checkbox.addEventListener("change", (event) => {
+                const checked = event.target.checked;
+
+                const customEvent = new CustomEvent("dark-mode:toggle", {
+                    bubbles: true,
+                    detail: { checked }
+                });
+
+                document.body.dispatchEvent(customEvent);
+            });
+
+        </script>
 
         <main class="layout">
             <section class="content">
