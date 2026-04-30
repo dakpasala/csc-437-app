@@ -47,6 +47,10 @@ lakers-card {
     justify-content: stretch;
 }
 
+lakers-element {
+    display: contents;
+}
+
 h1, h2 {
     font-family: 'Playfair Display', serif;
 }
