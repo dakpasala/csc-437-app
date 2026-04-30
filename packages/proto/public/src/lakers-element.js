@@ -1,4 +1,4 @@
-import { html, shadow } from "@unbndl/html";
+import { html, css, shadow } from "@unbndl/html";
 import "./lakers-card.js";
 
 export class LakersElement extends HTMLElement {
@@ -8,11 +8,55 @@ export class LakersElement extends HTMLElement {
 
     static observedAttributes = ["src"];
 
+    static styles = css`
+        :host {
+            display: contents;
+        }
+
+        h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 24px;
+            color: var(--color-text-second-heading);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        ul {
+            padding-left: 20px;
+        }
+
+        li {
+            margin: 0.25rem 0;
+            color: var(--color-text);
+        }
+
+        a {
+            color: var(--color-accent);
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        svg.icon {
+            display: inline-block;
+            height: 1em;
+            width: 1em;
+            fill: currentColor;
+        }
+    `;
+
     attributeChangedCallback(name, _, newValue) {
         if (name === "src") {
             this.hydrate(newValue).then((data) => {
                 const view = LakersElement.renderCard(data);
-                shadow(this).replace(view);
+                shadow(this)
+                    .styles(LakersElement.styles)
+                    .replace(view);
             });
         }
     }
