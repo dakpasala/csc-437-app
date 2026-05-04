@@ -1,4 +1,5 @@
 import express, { Request, Response } from "express";
+export * from "./models/lakers";
 
 const app = express();
 const port = process.env.PORT || 3000;
