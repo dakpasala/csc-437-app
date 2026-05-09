@@ -28,7 +28,7 @@ const lakersSchema = new Schema<LakersData>(
       }
     ]
   },
-  { collection: "lakers" }
+  { collection: "Lakers" }
 );
 
 const LakersModel = model<LakersData>(

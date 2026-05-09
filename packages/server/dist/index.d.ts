@@ -1,1 +1,1 @@
-export * from "./models/lakers";
+export {};

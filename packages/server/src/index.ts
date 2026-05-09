@@ -14,29 +14,29 @@ app.use(express.json());
 
 connect("LakersData");
 
-app.use("/api/destinations", lakers);
+app.use("/api/lakers", lakers);
 
 app.get("/hello", (req: Request, res: Response) => {
     res.send("Hello, World");
 });
 
-app.get("/api/lakers/:id", (req: Request<{ id: string }>, res: Response) => {
-  const { id } = req.params;
+// app.get("/api/lakers/:id", (req: Request<{ id: string }>, res: Response) => {
+//   const { id } = req.params;
 
-  Lakers.get(id)
-    .then((lake: LakersData | null) => {
-      if (!lake) res.status(404).send();
-      else res.send(lake);
-    })
-    .catch((err) => res.status(500).send(err));
-});
+//   Lakers.get(id)
+//     .then((lake: LakersData | null) => {
+//       if (!lake) res.status(404).send();
+//       else res.send(lake);
+//     })
+//     .catch((err) => res.status(500).send(err));
+// });
 
-app.get("/api/laker", (req: Request, res: Response) => {
-  Lakers.index()
-    .then((list: LakersData[]) => {
-      res.send({ count: list.length, data: list});
-    });
-});
+// app.get("/api/laker", (req: Request, res: Response) => {
+//   Lakers.index()
+//     .then((list: LakersData[]) => {
+//       res.send({ count: list.length, data: list});
+//     });
+// });
 
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);

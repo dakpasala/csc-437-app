@@ -1,99 +1,34 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const lakersData = {
-    lakers: {
-        "Coach": "JJ Redick",
-        "Conference": "Western Conference",
-        "Players": [
-            {
-                "player": "LeBron James",
-                "href": "player.html"
-            },
-            {
-                "player": "Luka Doncic"
-            },
-            {
-                "player": "Austin Reaves"
-            },
-            {
-                "player": "Marcus Smart"
-            },
-            {
-                "player": "Luke Kennard"
-            },
-            {
-                "player": "Deandre Ayton"
-            },
-            {
-                "player": "Rui Hachimura"
-            },
-            {
-                "player": "Bronny James"
-            },
-            {
-                "player": "Jaxson Hayes"
-            },
-            {
-                "player": "Maxi Kleber"
-            },
-            {
-                "player": "Jarred Vandervilt"
-            },
-            {
-                "player": "Adou Thiero"
-            },
-            {
-                "player": "Drew Timme"
-            },
-            {
-                "player": "Nick Smith Jr."
-            }
-        ],
-        "Games": [
-            {
-                "game": "Lakers vs Celtics",
-                "href": "game.html"
-            },
-            {
-                "game": "Lakers @ Thunder"
-            },
-            {
-                "game": "Lakers @ Wizards"
-            },
-            {
-                "game": "Lakers vs Wolves"
-            },
-            {
-                "game": "Lakers @Knicks"
-            },
-            {
-                "game": "Lakers vs Hawks"
-            }
-        ],
-        "Championships": [
-            {
-                "championship": "2019-2020",
-                "href": "chip.html"
-            },
-            {
-                "championship": "2009-2010"
-            },
-            {
-                "championship": "2008-2009"
-            },
-            {
-                "championship": "2001-2002"
-            },
-            {
-                "championship": "2000-2001"
-            },
-            {
-                "championship": "1999-2000"
-            }
-        ]
-    }
-};
-function get(id) {
-    return lakersData[id];
+const mongoose_1 = require("mongoose");
+const lakersSchema = new mongoose_1.Schema({
+    id: String,
+    Coach: String,
+    Conference: String,
+    Players: [
+        {
+            player: String,
+            href: String
+        }
+    ],
+    Games: [
+        {
+            game: String,
+            href: String
+        }
+    ],
+    Championships: [
+        {
+            championship: String,
+            href: String
+        }
+    ]
+}, { collection: "Lakers" });
+const LakersModel = (0, mongoose_1.model)("Lakers", lakersSchema);
+function index() {
+    return LakersModel.find();
 }
-exports.default = { get };
+function get(id) {
+    return LakersModel.findOne({ id });
+}
+exports.default = { index, get };
