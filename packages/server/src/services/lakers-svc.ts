@@ -1,128 +1,47 @@
+import { Schema, model } from "mongoose";
 import { LakersData } from "../models/lakers";
 
-const lakersData: { [key: string]: LakersData } = {
-    lakers: {
-        "Coach": "JJ Redick",
-        "Conference" : "Western Conference",
-        "Players": [
-            
-            {
-                "player" : "LeBron James", 
-                "href" : "player.html"
-            },
+const lakersSchema = new Schema<LakersData>(
+  {
+    id: String,
+    Coach: String,
+    Conference: String,
 
-            {
-                "player" : "Luka Doncic"
-            },
+    Players: [
+      {
+        player: String,
+        href: String
+      }
+    ],
 
-            {
-                "player" : "Austin Reaves"
-            },
+    Games: [
+      {
+        game: String,
+        href: String
+      }
+    ],
 
-            {
-                "player" : "Marcus Smart"
-            },
+    Championships: [
+      {
+        championship: String,
+        href: String
+      }
+    ]
+  },
+  { collection: "lakers" }
+);
 
-            {
-                "player" : "Luke Kennard"
-            },
+const LakersModel = model<LakersData>(
+  "Lakers",
+  lakersSchema
+);
 
-            {
-                "player" : "Deandre Ayton"
-            },
-
-            {
-                "player" : "Rui Hachimura"
-            },
-
-            {
-                "player" : "Bronny James"
-            },
-
-            {
-                "player" : "Jaxson Hayes"
-            },
-
-            {
-                "player" : "Maxi Kleber"
-            },
-
-            {
-                "player" : "Jarred Vandervilt"
-            },
-
-            {
-                "player" : "Adou Thiero"
-            },
-
-            {
-                "player" : "Drew Timme"
-            },
-
-            {
-                "player" : "Nick Smith Jr."
-            }
-            
-        ],
-
-        "Games" : [
-            {
-                "game" : "Lakers vs Celtics",
-                "href" : "game.html"
-            },
-
-            {
-                "game" : "Lakers @ Thunder"
-            },
-
-            {
-                "game" : "Lakers @ Wizards"
-            },
-
-            {
-                "game" : "Lakers vs Wolves"
-            },
-
-            {
-                "game" : "Lakers @Knicks"
-            },
-
-            {
-                "game" : "Lakers vs Hawks"
-            }
-        ],
-
-        "Championships" : [
-            {   
-                "championship" : "2019-2020",
-                "href" : "chip.html"
-            },
-
-            {
-                "championship" : "2009-2010"
-            },
-
-            {
-                "championship" : "2008-2009"
-            },
-
-            {
-                "championship" : "2001-2002"
-            },
-
-            {
-                "championship" : "2000-2001"
-            },
-
-            {
-                "championship" : "1999-2000"
-            }
-        ]
-    }
-};
-
-function get(id: string): LakersData | undefined {
-    return lakersData[id];
+function index(): Promise<LakersData[]> {
+  return LakersModel.find();
 }
 
-export default { get };
+function get(id: string): Promise<LakersData | null> {
+  return LakersModel.findOne({ id });
+}
+
+export default { index, get };

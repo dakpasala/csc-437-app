@@ -14,8 +14,11 @@ export interface Championship {
 }
 
 export interface LakersData {
+    id: string;
+
     Coach: string;
     Conference: string;
+
     Players: Player[];
     Games: Game[];
     Championships: Championship[];
