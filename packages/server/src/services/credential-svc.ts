@@ -42,3 +42,29 @@ function create(username: string, password: string): Promise<Credential> {
         })
     );
 }
+
+function verify(username: string, password: string)
+  : Promise<string>
+{
+  return credentialModel
+    .find({ username })
+    .then((found) => {
+      if (!found || found.length !== 1)
+        throw "Invalid username or password";
+      return found[0];
+    })
+    .then(
+      (credsOnFile : Credential) =>
+        bcrypt.compare(
+          password,
+          credsOnFile.hashedPassword
+        )
+        .then((result: boolean) => {
+          if (!result)
+            throw("Invalid username or password");
+          return credsOnFile.username;
+        })
+      );
+}
+
+export default { create, verify };
