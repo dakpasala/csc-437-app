@@ -31,4 +31,23 @@ function index() {
 function get(id) {
     return LakersModel.findOne({ id });
 }
-exports.default = { index, get };
+function create(json) {
+    const t = new LakersModel(json);
+    return t.save();
+}
+function update(id, lakersData) {
+    return LakersModel.findOneAndUpdate({ id }, lakersData, { new: true })
+        .then((updated) => {
+        if (!updated)
+            throw `${id} not updated`;
+        else
+            return updated;
+    });
+}
+function remove(id) {
+    return LakersModel.findOneAndDelete({ id }).then((deleted) => {
+        if (!deleted)
+            throw `${id} not deleted`;
+    });
+}
+exports.default = { index, get, create, update, remove };

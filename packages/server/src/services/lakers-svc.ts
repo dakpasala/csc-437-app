@@ -49,7 +49,7 @@ function create(json: LakersData): Promise<LakersData> {
   return t.save();
 }
 
-function update(id: String, lakersData: LakersData): Promise<LakersData> | undefined {
+function update(id: String, lakersData: LakersData): Promise<LakersData> {
   return LakersModel.findOneAndUpdate(
     {id},
     lakersData,

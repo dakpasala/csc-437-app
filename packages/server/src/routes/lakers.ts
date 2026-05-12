@@ -33,15 +33,13 @@ router.post("/", (req: Request, res: Response) => {
 });
 
 router.put("/:id", (req: Request, res: Response) => {
-  const { id } = req.params;
+  const id = req.params.id as string;
   const updatedLakersData = req.body;
 
-  // looks like id.toString() is needed he
-  Lakers.update(id.toString(), updatedLakersData)
-    .then((lakersData: LakersData) => res.json(lakersData))
-    .catch((err) => res.status(404).end());
+  Lakers.update(id, updatedLakersData)
+    .then((lakers) => res.json(lakers))
+    .catch((err) => res.status(404).send(err));
 });
-
 router.delete("/:id", (req: Request, res: Response) => {
   const { id } = req.params;
 
