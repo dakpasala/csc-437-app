@@ -4,6 +4,7 @@ import Lakers from "./services/lakers-svc";
 import { LakersData } from "./models/lakers"
 
 import lakers from "./routes/lakers";
+import auth from "./routes/auth"
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -15,6 +16,7 @@ app.use(express.json());
 connect("LakersData");
 
 app.use("/api/lakers", lakers);
+app.use("/auth", auth);
 
 app.get("/hello", (req: Request, res: Response) => {
     res.send("Hello, World");
