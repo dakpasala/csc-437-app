@@ -34,12 +34,20 @@ router.post("/", (req: Request, res: Response) => {
 
 router.put("/:id", (req: Request, res: Response) => {
   const { id } = req.params;
-  const newDestination = req.body;
+  const updatedLakersData = req.body;
 
   // looks like id.toString() is needed he
-  Lakers.update(id.toString(), newDestination)
+  Lakers.update(id.toString(), updatedLakersData)
     .then((lakersData: LakersData) => res.json(lakersData))
     .catch((err) => res.status(404).end());
+});
+
+router.delete("/:id", (req: Request, res: Response) => {
+  const { id } = req.params;
+
+  Lakers.remove(id.toString())
+    .then(() => res.status(204).end())
+    .catch((err) => res.status(404).send(err));
 });
 
 export default router;

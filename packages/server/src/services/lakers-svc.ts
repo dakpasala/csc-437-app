@@ -58,7 +58,14 @@ function update(id: String, lakersData: LakersData): Promise<LakersData> | undef
     if (!updated) throw `${id} not updated`;
     else return updated as LakersData;
   })
-
 }
 
-export default { index, get, create, update };
+function remove(id: String): Promise<void> {
+  return LakersModel.findOneAndDelete({id}).then(
+    (deleted) => {
+      if (!deleted) throw `${id} not deleted`;
+    }
+  )
+}
+
+export default { index, get, create, update, remove };
