@@ -24,19 +24,19 @@ const lakersSchema = new mongoose_1.Schema({
         },
     ],
 }, { collection: "Lakers" });
-const LakersModel = (0, mongoose_1.model)("Lakers", lakersSchema);
+const NBAModel = (0, mongoose_1.model)("Lakers", lakersSchema);
 function index() {
-    return LakersModel.find();
+    return NBAModel.find();
 }
 function get(id) {
-    return LakersModel.findOne({ id });
+    return NBAModel.findOne({ id });
 }
 function create(json) {
-    const t = new LakersModel(json);
+    const t = new NBAModel(json);
     return t.save();
 }
 function update(id, nbaData) {
-    return LakersModel.findOneAndUpdate({ id }, nbaData, { new: true }).then((updated) => {
+    return NBAModel.findOneAndUpdate({ id }, nbaData, { new: true }).then((updated) => {
         if (!updated)
             throw `${id} not updated`;
         else
@@ -44,7 +44,7 @@ function update(id, nbaData) {
     });
 }
 function remove(id) {
-    return LakersModel.findOneAndDelete({ id }).then((deleted) => {
+    return NBAModel.findOneAndDelete({ id }).then((deleted) => {
         if (!deleted)
             throw `${id} not deleted`;
     });

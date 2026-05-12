@@ -13,7 +13,7 @@ export interface Championship {
     href?: string;
 }
 
-export interface LakersData {
+export interface NBAData {
     id: string;
 
     Coach: string;

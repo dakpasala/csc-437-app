@@ -1,10 +1,10 @@
 import express, { Request, Response } from "express";
 import { connect } from "./services/mongo";
-import Lakers from "./services/lakers-svc";
-import { LakersData } from "./models/lakers"
+import Lakers from "./services/nba-svc";
+import { NBAData } from "./models/nba";
 
-import lakers from "./routes/lakers";
-import auth from "./routes/auth"
+import nba from "./routes/nba";
+import auth from "./routes/auth";
 import { authenticateUser } from "./routes/auth";
 
 const app = express();
@@ -16,11 +16,11 @@ app.use(express.json());
 
 connect("LakersData");
 
-app.use("/api/lakers", lakers);
+app.use("/api/nba", nba);
 app.use("/auth", authenticateUser, auth);
 
 app.get("/hello", (req: Request, res: Response) => {
-    res.send("Hello, World");
+  res.send("Hello, World");
 });
 
 // app.get("/api/lakers/:id", (req: Request<{ id: string }>, res: Response) => {

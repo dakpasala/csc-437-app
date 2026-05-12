@@ -5,7 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const mongo_1 = require("./services/mongo");
-const lakers_1 = __importDefault(require("./routes/lakers"));
+const nba_1 = __importDefault(require("./routes/nba"));
 const auth_1 = __importDefault(require("./routes/auth"));
 const auth_2 = require("./routes/auth");
 const app = (0, express_1.default)();
@@ -14,7 +14,7 @@ const staticDir = process.env.STATIC || "public";
 app.use(express_1.default.static(staticDir));
 app.use(express_1.default.json());
 (0, mongo_1.connect)("LakersData");
-app.use("/api/lakers", lakers_1.default);
+app.use("/api/nba", nba_1.default);
 app.use("/auth", auth_2.authenticateUser, auth_1.default);
 app.get("/hello", (req, res) => {
     res.send("Hello, World");
