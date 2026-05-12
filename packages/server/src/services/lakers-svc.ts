@@ -44,4 +44,21 @@ function get(id: string): Promise<LakersData | null> {
   return LakersModel.findOne({ id });
 }
 
-export default { index, get };
+function create(json: LakersData): Promise<LakersData> {
+  const t = new LakersModel(json);
+  return t.save();
+}
+
+function update(id: String, lakersData: LakersData): Promise<LakersData> | undefined {
+  return LakersModel.findOneAndUpdate(
+    {id},
+    lakersData,
+    { new: true})
+  .then((updated) => {
+    if (!updated) throw `${id} not updated`;
+    else return updated as LakersData;
+  })
+
+}
+
+export default { index, get, create, update };
