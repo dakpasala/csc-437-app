@@ -22,3 +22,23 @@ const credentialModel = model<Credential>(
   "Credential",
   credentialSchema
 );
+
+function create(username: string, password: string): Promise<Credential> {
+    return credentialModel
+        .find({ username })
+        .then((found: Credential[]) => {
+        if (found.length) throw `Username exists: ${username}`
+    })
+    .then(() =>
+        bcrypt
+            .genSalt(10)
+            .then((salt: string) => bcrypt.hash(password, salt))
+            .then((hashedPassword: string) => {
+                const creds = new credentialModel({
+                    username,
+                    hashedPassword
+            });
+            return creds.save();
+        })
+    );
+}
