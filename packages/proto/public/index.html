@@ -16,6 +16,8 @@
             {
                 "imports" : {
                     "@unbndl/html" : "https://unpkg.com/@unbndl/html"
+                    "@unbndl/auth": "https://unpkg.com/@unbndl/auth",
+                    "@unbndl/view": "https://unpkg.com/@unbndl/view"
                 }
             }
         </script>
@@ -24,93 +26,47 @@
             import { define } from "@unbndl/html";
             import { LakersCardElement } from "./src/lakers-card.js";
             import { LakersElement } from "./src/lakers-element.js";
+            import { LakersHeaderElement } from "./src/lakers-header.js";
 
             define({
+                "auth-provider": Auth.provider,
                 "lakers-card": LakersCardElement,
-                "lakers-element" : LakersElement
+                "lakers-element" : LakersElement,
+                "lakers-header": LakersHeaderElement
             });
         </script>
-
-
     </head>
+
     <body>
-        <header class="header">
-            <h1>
-                <svg class="icon">
-                    <use href="/icons/icons.svg#icon-basketball" />
-                </svg>
-                Los Angeles Lakers
-                <svg class="icon">
-                    <use href="/icons/icons.svg#icon-championship" />
-                </svg>
-            </h1>
+        <auth-provider>
+            <lakers-header></lakers-header>
+            <script>
+                document.body.addEventListener(
+                    "dark-mode:toggle",
+                    (event) => {
+                        const page = event.currentTarget;
+                        const checked = event.detail.checked;
+                        page.classList.toggle("dark-mode", checked);
+                    }
+                );
+            </script>
 
-            <!-- <label>
-                <input type="checkbox" onchange="toggleDarkMode(event.target.checked)" />
-                Dark mode
-            </label> -->
+            <main class="layout">
+                <section class="content">
+                    <lakers-card>
+                        <h2 slot="title">Coach</h2>
+                        <p slot="content">JJ Redick</p>
+                    </lakers-card>
 
-            <label>
-                <input type="checkbox"/> Dark Mode
-            </label>
-        </header>
+                    <lakers-card>
+                        <h2 slot="title">Conference</h2>
+                        <p slot="content">Western Conference</p>
+                    </lakers-card>
 
-        <script>
-            document.body.addEventListener(
-                "dark-mode:toggle",
-                (event) => {
-                    const page = event.currentTarget;
-                    const checked = event.detail.checked;
-                    page.classList.toggle("dark-mode", checked);
-                }
-            );
-
-            // function toggleDarkMode(target, checked) {
-            //     const customEvent = new CustomEvent(
-            //         "dark-mode:toggle", {
-            //             bubbles: true,
-            //             detail: { checked },
-            //         }
-            //     );
-
-            //     document.body.dispatchEvent(customEvent);
-            // }
-
-            const checkbox = document.querySelector("input[type='checkbox']");
-
-            checkbox.addEventListener("change", (event) => {
-                const checked = event.target.checked;
-
-                const customEvent = new CustomEvent("dark-mode:toggle", {
-                    bubbles: true,
-                    detail: { checked }
-                });
-
-                document.body.dispatchEvent(customEvent);
-            });
-
-        </script>
-
-        <main class="layout">
-            <section class="content">
-                <lakers-card>
-                    <h2 slot="title">Coach</h2>
-                    <p slot="content">JJ Redick</p>
-                </lakers-card>
-
-                <lakers-card>
-                    <h2 slot="title">Conference</h2>
-                    <p slot="content">Western Conference</p>
-                </lakers-card>
-
-                <!-- BEGIN OF LAKERS CARDS -->
-
-
-                <lakers-element src="data/data.json">
-                </lakers-element>
-                
-                 <!-- END OF LAKERS CARDS -->
-            </section>
-        </main>
+                    <lakers-element src="data/data.json">
+                    </lakers-element>
+                </section>
+            </main>
+        </auth-provider>
     </body>
 </html>
