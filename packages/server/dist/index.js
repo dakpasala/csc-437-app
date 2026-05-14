@@ -14,8 +14,8 @@ const staticDir = process.env.STATIC || "public";
 app.use(express_1.default.static(staticDir));
 app.use(express_1.default.json());
 (0, mongo_1.connect)("LakersData");
-app.use("/api/nba", nba_1.default);
-app.use("/auth", auth_2.authenticateUser, auth_1.default);
+app.use("/auth", auth_1.default);
+app.use("/api/nba", auth_2.authenticateUser, nba_1.default);
 app.get("/hello", (req, res) => {
     res.send("Hello, World");
 });

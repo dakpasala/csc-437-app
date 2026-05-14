@@ -1,16 +1,40 @@
 import { html, css, shadow } from "@unbndl/html";
+
+import { createViewModel, fromAttributes } from "@unbndl/view";
+import { fromAuth } from "@unbndl/auth";
+
 import "./lakers-card.js";
 
 export class LakersElement extends HTMLElement {
+    viewModel = createViewModel({
+        src:"",
+        authenticated: false,
+        token:"",
+    })
+    .with(fromAttributes(this), "src")
+    .with(fromAuth(this), "authenticated", "token");
+
     constructor() {
         super();
-    }
+        this.viewModel.createEffect(($) => {
+            if ($.authenticated && $.src) {
+                this.hydrate($.src).then((data) => {
+                    if (!data) return;
 
-    static observedAttributes = ["src"];
+                    const view = LakersElement.renderCard(data);
+
+                    shadow(this)
+                        .styles(LakersElement.styles)
+                        .replace(view);
+                })
+            }
+        })
+    }
 
     static styles = css`
         :host {
             display: contents;
+            color: val(--color-text);
         }
 
         h2 {
@@ -50,15 +74,16 @@ export class LakersElement extends HTMLElement {
         }
     `;
 
-    attributeChangedCallback(name, _, newValue) {
-        if (name === "src") {
-            this.hydrate(newValue).then((data) => {
-                const view = LakersElement.renderCard(data);
-                shadow(this)
-                    .styles(LakersElement.styles)
-                    .replace(view);
-            });
+    get authorization() {
+        const $ = this.viewModel.toObject();
+
+        if ($.authenticated) {
+            return {
+                Authorization: `Bearer ${$.token}`
+            };
         }
+
+        return {};
     }
 
     static makeLink(href, label) {
@@ -69,7 +94,7 @@ export class LakersElement extends HTMLElement {
     }
 
     static renderCard(data) {
-        const { Players, Games, Championships } = data;
+        const { Coach, Conference, Players, Games, Championships } = data;
 
         const playerList = Players.map(p =>
             p.href
@@ -91,6 +116,16 @@ export class LakersElement extends HTMLElement {
 
         return html`
             <lakers-card>
+                <h2 slot="title">Coach</h2>
+                <ul slot="content">${Coach}</ul>
+            </lakers-card>
+
+            <lakers-card>
+                <h2 slot="title">Conference</h2>
+                <ul slot="content">${Conference}</ul>
+            </lakers-card>
+
+            <lakers-card>
                 <h2 slot="title">Players</h2>
                 <ul slot="content">${playerList}</ul>
             </lakers-card>
@@ -108,14 +143,15 @@ export class LakersElement extends HTMLElement {
     }
 
     hydrate(src) {
-        return fetch(src)
-            .then((response) => {
-                if (response.status !== 200)
-                    throw `HTTP Status ${response.status}`;
-                return response.json();
-            })
-            .catch((error) => {
-                console.log(`Could not fetch ${src}:`, error);
-            });
+        return fetch(src, { headers: this.authorization })
+        .then((response) => {
+            if (response.status !== 200)
+                throw `HTTP Status ${response.status}`;
+
+            return response.json();
+        })
+        .catch((error) => {
+            console.log(`Could not fetch ${src}:`, error);
+        });
     }
 }

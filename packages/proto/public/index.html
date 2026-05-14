@@ -15,7 +15,7 @@
         <script type="importmap">
             {
                 "imports" : {
-                    "@unbndl/html" : "https://unpkg.com/@unbndl/html"
+                    "@unbndl/html" : "https://unpkg.com/@unbndl/html",
                     "@unbndl/auth": "https://unpkg.com/@unbndl/auth",
                     "@unbndl/view": "https://unpkg.com/@unbndl/view"
                 }
@@ -27,9 +27,10 @@
             import { LakersCardElement } from "./src/lakers-card.js";
             import { LakersElement } from "./src/lakers-element.js";
             import { LakersHeaderElement } from "./src/lakers-header.js";
+            import { Auth } from "@unbndl/auth";
 
             define({
-                "auth-provider": Auth.provider,
+                "auth-provider": Auth.Provider,
                 "lakers-card": LakersCardElement,
                 "lakers-element" : LakersElement,
                 "lakers-header": LakersHeaderElement
@@ -53,17 +54,7 @@
 
             <main class="layout">
                 <section class="content">
-                    <lakers-card>
-                        <h2 slot="title">Coach</h2>
-                        <p slot="content">JJ Redick</p>
-                    </lakers-card>
-
-                    <lakers-card>
-                        <h2 slot="title">Conference</h2>
-                        <p slot="content">Western Conference</p>
-                    </lakers-card>
-
-                    <lakers-element src="data/data.json">
+                    <lakers-element src="/api/nba/lakers">
                     </lakers-element>
                 </section>
             </main>

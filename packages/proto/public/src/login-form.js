@@ -18,10 +18,11 @@ export class LoginFormElement extends HTMLElement {
   constructor() {
     super();
     shadow(this)
-      .styles(reset.styles, LoginFormElement.styles)
-      .replace(this.viewModel.render(this.view))
-      .listen("submit", (ev) =>
-        this.submitLogin(ev, this.getAttribute("api") || "#"));
+      .replace(this.viewModel.render(this.view));
+
+    this.shadowRoot?.addEventListener("submit", (ev) => {
+        this.submitLogin(ev, this.getAttribute("api") || "#");
+    })
   }
 
   submitLogin(event, endpoint) {

@@ -16,8 +16,8 @@ app.use(express.json());
 
 connect("LakersData");
 
-app.use("/api/nba", nba);
-app.use("/auth", authenticateUser, auth);
+app.use("/auth", auth);
+app.use("/api/nba", authenticateUser, nba);
 
 app.get("/hello", (req: Request, res: Response) => {
   res.send("Hello, World");
