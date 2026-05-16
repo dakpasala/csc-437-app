@@ -34,7 +34,7 @@ export class LakersElement extends HTMLElement {
     static styles = css`
         :host {
             display: contents;
-            color: val(--color-text);
+            color: var(--color-text);
         }
 
         h2 {
