@@ -1,0 +1,95 @@
+body {
+    font-family: 'Inter', Arial, sans-serif;
+    background-color: var(--color-background-page);
+}
+
+body.dark-mode {
+  --color-background-page: black;
+  --color-background-card: purple;
+  --color-text: white;
+  --color-text-first-heading: gold;   
+  --color-text-second-heading: gold; 
+  --color-accent: gold;
+}
+
+@media (max-width: 600px) {
+    .layout {
+        padding: 1rem;
+    }
+
+    .content {
+        grid-template-columns: 1fr;
+    }
+}
+
+.header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    padding: 1rem;
+    background-color: var(--color-background-header);
+}
+
+.layout {
+    display: grid;
+    grid-template-columns: 1fr;
+    padding: 1.5rem;
+}
+
+.content {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
+}
+
+lakers-card {
+    justify-content: stretch;
+}
+
+lakers-element {
+    display: contents;
+}
+
+h1, h2 {
+    font-family: 'Playfair Display', serif;
+}
+
+h1 {
+    color: var(--color-text-first-heading);
+}
+
+h2 {
+    color: var(--color-text-second-heading);
+}
+
+p {
+    color: var(--color-text);
+}
+
+ul {
+    padding-left: 20px;
+}
+
+li {
+    margin: 0.25rem 0;
+    color: var(--color-text);
+}
+
+a {
+    color: var(--color-accent);
+    text-decoration: none;
+    font-weight: bold;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+svg.icon {
+  display: inline;
+  height: 2em;
+  width: 2em;
+  vertical-align: top;
+  fill: currentColor;
+}

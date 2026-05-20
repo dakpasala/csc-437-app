@@ -1,0 +1,6 @@
+var l=Object.defineProperty;var c=(e,s,t)=>s in e?l(e,s,{enumerable:!0,configurable:!0,writable:!0,value:t}):e[s]=t;var n=(e,s,t)=>c(e,typeof s!="symbol"?s+"":s,t);import{c as b,g as p,h as g,s as w,d as f,a as v}from"./view-RiyZNR95.js";class E extends HTMLElement{constructor(){var t;super();n(this,"viewModel",b({username:"",password:""}).with(p(this),"username","password"));n(this,"view",g`<form>
+      <slot></slot>
+      <button type="submit">
+        <slot name="submit-label">Login</slot>
+      </button>
+    </form>`);w(this).replace(this.viewModel.render(this.view)),(t=this.shadowRoot)==null||t.addEventListener("submit",i=>{this.submitLogin(i,this.getAttribute("api")||"#")})}submitLogin(t,i){t.preventDefault();const r=this.viewModel.toObject(),u="POST",m={"Content-Type":"application/json"},a=JSON.stringify(r);console.log("Posting login form:",i,a,t),fetch(i,{method:u,headers:m,body:a}).then(o=>{if(o.status!==200)throw`Form submission failed: Status ${o.status}`;return o.json()}).then(o=>{const{token:h}=o,d=new CustomEvent("auth:message",{bubbles:!0,composed:!0,detail:["auth/signin",{token:h,redirect:"/"}]});this.dispatchEvent(d)})}}f({"auth-provider":v.Provider,"login-form":E});

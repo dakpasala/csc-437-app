@@ -102,11 +102,20 @@ export class LakersElement extends HTMLElement {
                 : html`<li>${p.player}</li>`
         );
 
-        const gameList = Games.map(g =>
-            g.href
-                ? html`<li>${LakersElement.makeLink(g.href, g.game)}</li>`
-                : html`<li>${g.game}</li>`
-        );
+        const gameList = Games.map(g => {
+            const opponent = g.game.split(" vs ")[1];
+
+            return g["opponent-id"]
+                ? html`
+                    <li>
+                        Lakers vs
+                        <a href=${"/app/team/" + g["opponent-id"]}>
+                            ${opponent}
+                        </a>
+                    </li>
+                `
+                : html`<li>${g.game}</li>`;
+        });
 
         const chipList = Championships.map(c =>
             c.href

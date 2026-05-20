@@ -7,6 +7,9 @@ import nba from "./routes/nba";
 import auth from "./routes/auth";
 import { authenticateUser } from "./routes/auth";
 
+import fs from "node:fs/promises";
+import path from "path";
+
 const app = express();
 const port = process.env.PORT || 3000;
 const staticDir = process.env.STATIC || "public";
@@ -18,6 +21,10 @@ connect("LakersData");
 
 app.use("/auth", auth);
 app.use("/api/nba", authenticateUser, nba);
+
+app.get("/", (_req: Request, res: Response) => {
+  res.redirect("/app");
+});
 
 app.get("/hello", (req: Request, res: Response) => {
   res.send("Hello, World");
@@ -40,6 +47,13 @@ app.get("/hello", (req: Request, res: Response) => {
 //       res.send({ count: list.length, data: list});
 //     });
 // });
+
+app.use("/app", (req: Request, res: Response) => {
+  const indexHtml = path.resolve(staticDir, "index.html");
+  fs.readFile(indexHtml, { encoding: "utf8" }).then((html) =>
+    res.send(html)
+  );
+});
 
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);
