@@ -2,6 +2,7 @@ import { css, html, shadow } from "@unbndl/html";
 import { createViewModel } from "@unbndl/view";
 import { fromAuth } from "@unbndl/auth";
 import reset from "./reset.css.js";
+import { applyTeamTheme } from "../team-themes.ts";
 
 export class NBAHeaderElement extends HTMLElement {
     viewModel = createViewModel({
@@ -145,5 +146,6 @@ export class NBAHeaderElement extends HTMLElement {
         const checked = (event.target as HTMLInputElement).checked;
 
         document.body.classList.toggle("dark-mode", checked);
+        applyTeamTheme(document.body.dataset.team);
     }
 }

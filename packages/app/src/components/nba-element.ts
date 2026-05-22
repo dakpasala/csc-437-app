@@ -5,6 +5,7 @@ import { fromAuth } from "@unbndl/auth";
 import { NBAData } from "server/models";
 
 import "./nba-card.js";
+import { getTeamTheme } from "../team-themes.ts";
 
 
 export class NBAElement extends HTMLElement {
@@ -95,8 +96,15 @@ export class NBAElement extends HTMLElement {
         return a;
     }
 
-    static renderCard(data: NBAData) {
-        const { Coach, Conference, Players, Games, Championships } = data;
+    static renderCard(data?: NBAData) {
+        if (!data) {
+            return html`<loading>`;
+        }
+
+        // had to include this loading thing because something kept getting called leading to an error, so i just threw this in...
+
+        const { id, Coach, Conference, Players, Games, Championships } = data;
+        const teamName = getTeamTheme(id).name;
 
         const playerList = Players.map(p =>
             p.href
@@ -110,7 +118,7 @@ export class NBAElement extends HTMLElement {
             return g["opponent-id"]
                 ? html`
                     <li>
-                        Lakers vs
+                        ${teamName} vs
                         <a href=${"/app/team/" + g["opponent-id"]}>
                             ${opponent}
                         </a>

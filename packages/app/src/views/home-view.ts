@@ -1,4 +1,5 @@
 import { html, css, shadow } from "@unbndl/html";
+import { applyTeamTheme } from "../team-themes.ts";
 
 export class HomeViewElement extends HTMLElement {
     static template = html`
@@ -15,6 +16,8 @@ export class HomeViewElement extends HTMLElement {
 
     constructor() {
         super();
+
+        applyTeamTheme("lakers");
 
         shadow(this)
             .template(HomeViewElement.template)

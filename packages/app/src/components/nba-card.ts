@@ -24,6 +24,7 @@ export class NBACardElement extends HTMLElement {
     reset.styles,
     css`
       .card {
+        color: var(--color-text);
         background-color: var(--color-background-card);
         padding: 1rem;
         border-radius: 8px;

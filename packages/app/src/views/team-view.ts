@@ -4,6 +4,7 @@ import { NBAData } from "server/models";
 
 import "../components/nba-card.ts";
 import { NBAElement } from "../components/nba-element.ts";
+import { applyTeamTheme } from "../team-themes.ts";
 
 export class TeamViewElement extends HTMLElement {
     static observedAttributes = ["team-id"];
@@ -26,6 +27,8 @@ export class TeamViewElement extends HTMLElement {
         const teamId = this.teamId;
         const token = localStorage.getItem(Auth.User.TOKEN_KEY);
 
+        applyTeamTheme(teamId);
+
         if (!teamId || !token || this.requestedTeamId === teamId) {
             if (!teamId || !token) this.render();
             return;
@@ -39,26 +42,35 @@ export class TeamViewElement extends HTMLElement {
                 Authorization: `Bearer ${token}`
             }
         })
-            .then((response) => {
-                if (response.status !== 200) {
-                    throw new Error(`Server error ${response.status}`);
-                }
+        .then((response) => {
+            if (response.status !== 200) {
+                throw new Error(`Server error ${response.status}`);
+            }
 
-                return response.json();
-            })
-            .then((nbaData: NBAData) => this.render(nbaData))
-            .catch((error) => {
-                console.error(`Could not fetch team ${teamId}:`, error);
-                this.requestedTeamId = undefined;
-                this.render();
-            });
+            return response.json();
+        })
+        .then((nbaData: NBAData) => {
+            applyTeamTheme(nbaData.id || teamId);
+            this.render(nbaData);
+        })
+        .catch((error) => {
+            console.error(`Could not fetch team ${teamId}:`, error);
+            this.requestedTeamId = undefined;
+            this.render();
+        });
     }
 
     render(nbaData?: NBAData) {
         if (!nbaData) {
             shadow(this)
                 .styles(TeamViewElement.styles)
-                .replace(html`<p>Loading...</p>`);
+                .replace(html`
+                    <main class="layout">
+                        <section class="content">
+                            <p>Loading...</p>
+                        </section>
+                    </main>
+                `);
             return;
         }
 

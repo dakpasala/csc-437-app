@@ -12,6 +12,7 @@ import { NBAElement } from "./components/nba-element.ts";
 import { NBAHeaderElement } from "./components/nba-header.ts";
 import { HomeViewElement } from "./views/home-view.ts";
 import { TeamViewElement } from "./views/team-view.ts";
+import { applyTeamTheme } from "./team-themes.ts";
 
 const routes: Switch.Route[] = [
     {
@@ -54,4 +55,5 @@ define({
 document.body.addEventListener("dark-mode:toggle", (event: Event) => {
     const customEvent = event as CustomEvent;
     document.body.classList.toggle("dark-mode", customEvent.detail.checked);
+    applyTeamTheme(document.body.dataset.team);
 });

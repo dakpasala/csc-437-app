@@ -9,6 +9,7 @@ import { Msg } from "../messages.ts";
 
 import "../components/nba-card.ts";
 import { NBAElement } from "../components/nba-element.ts";
+import { applyTeamTheme } from "../team-themes.ts";
 
 interface TeamViewModel {
     authenticated: boolean;
@@ -55,6 +56,8 @@ export class TeamViewElement extends HTMLElement {
     requestData($: TeamViewModel) {
         const teamId = this.teamId;
 
+        applyTeamTheme(teamId);
+
         if (
             $.authenticated &&
             $.token &&
@@ -92,17 +95,19 @@ export class TeamViewElement extends HTMLElement {
     }
 
     render(nbaData?: NBAData) {
+        applyTeamTheme(nbaData?.id || this.teamId);
+
         const view = NBAElement.renderCard(nbaData);
 
         shadow(this)
-            .styles(TeamViewElement.styles)
-            .replace(html`
-                <main class="layout">
-                    <section class="content">
-                        ${view}
-                    </section>
-                </main>
-            `);
+        .styles(TeamViewElement.styles)
+        .replace(html`
+            <main class="layout">
+                <section class="content">
+                    ${view}
+                </section>
+            </main>
+        `);
     }
 
     static styles = css`
