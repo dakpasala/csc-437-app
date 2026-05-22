@@ -5,7 +5,7 @@ export class HomeViewElement extends HTMLElement {
         <template>
             <main class="layout">
                 <section class="content">
-                    <lakers-element src="/api/nba/lakers"></lakers-element>
+                    <nba-element src="/api/nba/lakers"></nba-element>
                 </section>
             </main>
         </template>

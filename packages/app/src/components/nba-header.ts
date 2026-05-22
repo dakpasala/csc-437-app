@@ -3,7 +3,7 @@ import { createViewModel } from "@unbndl/view";
 import { fromAuth } from "@unbndl/auth";
 import reset from "./reset.css.js";
 
-export class LakersHeaderElement extends HTMLElement {
+export class NBAHeaderElement extends HTMLElement {
     viewModel = createViewModel({
         authenticated: false,
         username: ""
@@ -16,7 +16,7 @@ export class LakersHeaderElement extends HTMLElement {
                     <use href="/icons/icons.svg#icon-basketball"></use>
                 </svg>
 
-                Los Angeles Lakers
+                NBA Teams
 
                 <svg class="icon">
                     <use href="/icons/icons.svg#icon-championship"></use>
@@ -121,7 +121,7 @@ export class LakersHeaderElement extends HTMLElement {
         super();
 
         shadow(this)
-            .styles(reset.styles, LakersHeaderElement.styles)
+            .styles(reset.styles, NBAHeaderElement.styles)
             .replace(this.viewModel.render(this.view))
             .delegate(".when-signed-in button", {
                 click: () => this.signout()

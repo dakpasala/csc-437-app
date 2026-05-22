@@ -2,8 +2,8 @@ import { css, html, shadow } from "@unbndl/html";
 import { Auth } from "@unbndl/auth";
 import { NBAData } from "server/models";
 
-import "../components/lakers-card.ts";
-import { LakersElement } from "../components/lakers-element.ts";
+import "../components/nba-card.ts";
+import { NBAElement } from "../components/nba-element.ts";
 
 export class TeamViewElement extends HTMLElement {
     static observedAttributes = ["team-id"];
@@ -62,7 +62,7 @@ export class TeamViewElement extends HTMLElement {
             return;
         }
 
-        const view = LakersElement.renderCard(nbaData);
+        const view = NBAElement.renderCard(nbaData);
 
         shadow(this)
             .styles(TeamViewElement.styles)

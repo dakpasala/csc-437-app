@@ -4,10 +4,10 @@ import { createViewModel, fromAttributes } from "@unbndl/view";
 import { fromAuth } from "@unbndl/auth";
 import { NBAData } from "server/models";
 
-import "./lakers-card.js";
+import "./nba-card.js";
 
 
-export class LakersElement extends HTMLElement {
+export class NBAElement extends HTMLElement {
     viewModel = createViewModel({
         src:"",
         authenticated: false,
@@ -23,10 +23,10 @@ export class LakersElement extends HTMLElement {
                 this.hydrate($.src).then((data) => {
                     if (!data) return;
 
-                    const view = LakersElement.renderCard(data);
+                    const view = NBAElement.renderCard(data);
 
                     shadow(this)
-                        .styles(LakersElement.styles)
+                        .styles(NBAElement.styles)
                         .replace(view);
                 })
             }
@@ -100,7 +100,7 @@ export class LakersElement extends HTMLElement {
 
         const playerList = Players.map(p =>
             p.href
-                ? html`<li>${LakersElement.makeLink(p.href, p.player)}</li>`
+                ? html`<li>${NBAElement.makeLink(p.href, p.player)}</li>`
                 : html`<li>${p.player}</li>`
         );
 
@@ -121,35 +121,35 @@ export class LakersElement extends HTMLElement {
 
         const chipList = Championships.map(c =>
             c.href
-                ? html`<li>${LakersElement.makeLink(c.href, c.championship)}</li>`
+                ? html`<li>${NBAElement.makeLink(c.href, c.championship)}</li>`
                 : html`<li>${c.championship}</li>`
         );
 
         return html`
-            <lakers-card>
+            <nba-card>
                 <h2 slot="title">Coach</h2>
                 <ul slot="content">${Coach}</ul>
-            </lakers-card>
+            </nba-card>
 
-            <lakers-card>
+            <nba-card>
                 <h2 slot="title">Conference</h2>
                 <ul slot="content">${Conference}</ul>
-            </lakers-card>
+            </nba-card>
 
-            <lakers-card>
+            <nba-card>
                 <h2 slot="title">Players</h2>
                 <ul slot="content">${playerList}</ul>
-            </lakers-card>
+            </nba-card>
 
-            <lakers-card>
+            <nba-card>
                 <h2 slot="title">Games</h2>
                 <ul slot="content">${gameList}</ul>
-            </lakers-card>
+            </nba-card>
 
-            <lakers-card>
+            <nba-card>
                 <h2 slot="title">Championships</h2>
                 <ul slot="content">${chipList}</ul>
-            </lakers-card>
+            </nba-card>
         `;
     }
 

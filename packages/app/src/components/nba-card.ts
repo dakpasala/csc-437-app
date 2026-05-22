@@ -1,7 +1,7 @@
 import { html, css, shadow } from "@unbndl/html";
 import reset from "./reset.css.js";
 
-export class LakersCardElement extends HTMLElement {
+export class NBACardElement extends HTMLElement {
   static template = html`
     <template>
       <div class="card">
@@ -16,8 +16,8 @@ export class LakersCardElement extends HTMLElement {
   constructor() {
     super();
     shadow(this)
-      .template(LakersCardElement.template)
-      .styles(...LakersCardElement.styles);
+      .template(NBACardElement.template)
+      .styles(...NBACardElement.styles);
   }
 
   static styles = [

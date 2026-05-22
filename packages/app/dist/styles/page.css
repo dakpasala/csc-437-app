@@ -43,11 +43,11 @@ body.dark-mode {
     gap: 1rem;
 }
 
-lakers-card {
+nba-card {
     justify-content: stretch;
 }
 
-lakers-element {
+nba-element {
     display: contents;
 }
 

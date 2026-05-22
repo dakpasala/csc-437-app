@@ -7,9 +7,9 @@ import { Msg } from "./messages.ts";
 import { Model, init } from "./model.ts";
 import { Cmd, update } from "./update.ts";
 
-import { LakersCardElement } from "./components/lakers-card.ts";
-import { LakersElement } from "./components/lakers-element.ts";
-import { LakersHeaderElement } from "./components/lakers-header.ts";
+import { NBACardElement } from "./components/nba-card.ts";
+import { NBAElement } from "./components/nba-element.ts";
+import { NBAHeaderElement } from "./components/nba-header.ts";
 import { HomeViewElement } from "./views/home-view.ts";
 import { TeamViewElement } from "./views/team-view.ts";
 
@@ -38,9 +38,9 @@ define({
     },
     "auth-provider": Auth.Provider,
     "history-provider": BrowserHistory.Provider,
-    "lakers-card": LakersCardElement,
-    "lakers-element": LakersElement,
-    "lakers-header": LakersHeaderElement,
+    "nba-card": NBACardElement,
+    "nba-element": NBAElement,
+    "nba-header": NBAHeaderElement,
     "home-view": HomeViewElement,
     "team-view": TeamViewElement,
 
