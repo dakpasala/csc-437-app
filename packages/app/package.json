@@ -14,11 +14,14 @@
   "dependencies": {
     "@unbndl/auth": "^1.0.4",
     "@unbndl/html": "^1.0.5",
+    "@unbndl/store": "^1.0.7",
     "@unbndl/switch": "^1.0.3",
-    "@unbndl/view": "^1.0.5"
+    "@unbndl/view": "^1.0.5",
+    "server": "^1.0.0"
   },
   "devDependencies": {
     "tsc": "^2.0.4",
+    "typescript": "^6.0.3",
     "vite": "^6.4.2"
   }
 }

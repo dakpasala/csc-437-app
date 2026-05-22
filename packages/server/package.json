@@ -6,6 +6,11 @@
   "author": "",
   "type": "commonjs",
   "main": "src/index.ts",
+  "exports": {
+    "./models": {
+      "import": "./src/models/index.ts"
+    }
+  },
   "scripts": {
     "dev": "nodemon",
     "build": "npx tsc",

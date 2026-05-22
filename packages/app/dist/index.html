@@ -12,15 +12,17 @@
         <link rel="stylesheet" href="/styles/tokens.css"/>
         <link rel="stylesheet" href="/styles/page.css" />
 
-      <script type="module" crossorigin src="/assets/main-sXXwlrR0.js"></script>
-      <link rel="modulepreload" crossorigin href="/assets/view-RiyZNR95.js">
+      <script type="module" crossorigin src="/assets/main-S1JQUX_h.js"></script>
+      <link rel="modulepreload" crossorigin href="/assets/view-Db42biem.js">
     </head>
 
     <body>
-        <history-provider>
+        <history-provider base="/app">
             <auth-provider redirect="/login.html">
-                <lakers-header></lakers-header>
-                <router-switch></router-switch>
+                <store-provider>
+                    <lakers-header></lakers-header>
+                    <router-switch></router-switch>
+                </store-provider>
             </auth-provider>
         </history-provider>
     </body>

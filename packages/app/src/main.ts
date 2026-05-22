@@ -1,19 +1,28 @@
 import { define, html } from "@unbndl/html";
 import { Auth } from "@unbndl/auth";
+import { Store } from "@unbndl/store";
 import { BrowserHistory, Switch } from "@unbndl/switch";
 
-import { LakersCardElement } from "../../proto/public/src/lakers-card.js";
-import { LakersElement } from "../../proto/public/src/lakers-element.js";
-import { LakersHeaderElement } from "../../proto/public/src/lakers-header.js";
-import { HomeViewElement } from "./views/home-view";
-import { TeamViewElement } from "./views/team-view";
+import { Msg } from "./messages.ts";
+import { Model, init } from "./model.ts";
+import { Cmd, update } from "./update.ts";
 
-const routes = [
+import { LakersCardElement } from "./components/lakers-card.ts";
+import { LakersElement } from "./components/lakers-element.ts";
+import { LakersHeaderElement } from "./components/lakers-header.ts";
+import { HomeViewElement } from "./views/home-view.ts";
+import { TeamViewElement } from "./views/team-view.ts";
+
+const routes: Switch.Route[] = [
     {
         path: "/app/team/:id",
-        view: html`
-            <team-view team-id=${($: any) => $.params.id}></team-view>
+        view: html<[Switch.Args]>`
+            <team-view team-id=${($) => $.params.id}></team-view>
         `
+    },
+    {
+        path: "/app",
+        redirect: "/app/team/lakers"
     },
     {
         path: "/",
@@ -22,6 +31,11 @@ const routes = [
 ];
 
 define({
+    "store-provider": class AppStore extends Store.Provider<Model, Msg, Cmd> {
+        constructor() {
+            super(update, init);
+        }
+    },
     "auth-provider": Auth.Provider,
     "history-provider": BrowserHistory.Provider,
     "lakers-card": LakersCardElement,

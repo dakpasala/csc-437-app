@@ -16,10 +16,12 @@
     </head>
 
     <body>
-        <history-provider>
+        <history-provider base="/app">
             <auth-provider redirect="/login.html">
-                <lakers-header></lakers-header>
-                <router-switch></router-switch>
+                <store-provider>
+                    <lakers-header></lakers-header>
+                    <router-switch></router-switch>
+                </store-provider>
             </auth-provider>
         </history-provider>
     </body>

@@ -5,6 +5,7 @@ export interface Player {
 export interface Game {
     game: string;
     href?: string;
+    "opponent-id"?: string;
 }
 export interface Championship {
     championship: string;

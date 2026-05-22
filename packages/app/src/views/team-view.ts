@@ -1,29 +1,78 @@
 import { css, html, shadow } from "@unbndl/html";
+import { Auth } from "@unbndl/auth";
+import { NBAData } from "server/models";
+
+import "../components/lakers-card.ts";
+import { LakersElement } from "../components/lakers-element.ts";
 
 export class TeamViewElement extends HTMLElement {
     static observedAttributes = ["team-id"];
 
-    attributeChangedCallback(name: string, oldValue: string | null, newValue: string | null) {
-        if (name === "team-id" && newValue) {
-            this.render(newValue);
-        }
-    }
+    private requestedTeamId?: string;
 
     connectedCallback() {
-        const id = this.getAttribute("team-id");
-        if (id) this.render(id);
+        this.loadTeam();
     }
 
-    render(teamId: string) {
+    attributeChangedCallback() {
+        this.loadTeam();
+    }
+
+    get teamId() {
+        return this.getAttribute("team-id") || undefined;
+    }
+
+    loadTeam() {
+        const teamId = this.teamId;
+        const token = localStorage.getItem(Auth.User.TOKEN_KEY);
+
+        if (!teamId || !token || this.requestedTeamId === teamId) {
+            if (!teamId || !token) this.render();
+            return;
+        }
+
+        this.requestedTeamId = teamId;
+        this.render();
+
+        fetch(`/api/nba/${teamId}`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        })
+            .then((response) => {
+                if (response.status !== 200) {
+                    throw new Error(`Server error ${response.status}`);
+                }
+
+                return response.json();
+            })
+            .then((nbaData: NBAData) => this.render(nbaData))
+            .catch((error) => {
+                console.error(`Could not fetch team ${teamId}:`, error);
+                this.requestedTeamId = undefined;
+                this.render();
+            });
+    }
+
+    render(nbaData?: NBAData) {
+        if (!nbaData) {
+            shadow(this)
+                .styles(TeamViewElement.styles)
+                .replace(html`<p>Loading...</p>`);
+            return;
+        }
+
+        const view = LakersElement.renderCard(nbaData);
+
         shadow(this)
-        .styles(TeamViewElement.styles)
-        .replace(html`
-            <main class="layout">
-                <section class="content">
-                    <lakers-element src=${`/api/nba/${teamId}`}></lakers-element>
-                </section>
-            </main>
-        `);
+            .styles(TeamViewElement.styles)
+            .replace(html`
+                <main class="layout">
+                    <section class="content">
+                        ${view}
+                    </section>
+                </main>
+            `);
     }
 
     static styles = css`
@@ -43,6 +92,7 @@ export class TeamViewElement extends HTMLElement {
             .layout {
                 padding: 1rem;
             }
+
             .content {
                 grid-template-columns: 1fr;
             }

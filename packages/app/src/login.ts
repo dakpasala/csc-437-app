@@ -1,6 +1,6 @@
 import { define } from "@unbndl/html";
 import { Auth } from "@unbndl/auth";
-import { LoginFormElement } from "../../proto/public/src/login-form.js";
+import { LoginFormElement } from "./components/login-form.ts";
 
 define({
   "auth-provider": Auth.Provider,
