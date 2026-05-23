@@ -1,4 +1,4 @@
-import{c as h,g as m,h as d,s as l,d as c,a as b}from"./view-Db42biem.js";class p extends HTMLElement{constructor(){var t;super(),this.viewModel=h({username:"",password:""}).with(m(this),"username","password"),this.view=d`<form>
+import{c as h,g as m,h as d,s as l,d as c,a as b}from"./view-lW8DKznB.js";class p extends HTMLElement{constructor(){var t;super(),this.viewModel=h({username:"",password:""}).with(m(this),"username","password"),this.view=d`<form>
       <slot></slot>
       <button type="submit">
         <slot name="submit-label">Login</slot>

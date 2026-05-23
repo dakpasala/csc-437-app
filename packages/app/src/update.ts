@@ -6,7 +6,8 @@ import { Model } from "./model.ts";
 import { Msg } from "./messages.ts";
 
 export type Cmd =
-  ["nba/load", { teamid: string; nbaData: NBAData }];
+  | ["nba/load", { teamid: string; nbaData: NBAData }]
+  | ["nba/error", { teamid: string; error: string }];
 
 export function update(
   model: Readonly<Model>,
@@ -34,7 +35,16 @@ export function update(
       return {
         ...model,
         nbaTeamId: payload.teamid,
-        nbaData: payload.nbaData
+        nbaData: payload.nbaData,
+        nbaError: undefined
+      };
+
+    case "nba/error":
+      return {
+        ...model,
+        nbaTeamId: payload.teamid,
+        nbaData: undefined,
+        nbaError: payload.error
       };
 
     default:
@@ -60,5 +70,12 @@ function requestNBA(
     .then((json) => [
       "nba/load",
       { teamid: payload.teamid, nbaData: json }
-    ] as const);
+    ] as Cmd)
+    .catch((error) => [
+      "nba/error",
+      {
+        teamid: payload.teamid,
+        error: error instanceof Error ? error.message : String(error)
+      }
+    ] as Cmd);
 }

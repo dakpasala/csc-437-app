@@ -1,7 +1,11 @@
 import { css, html, shadow } from "@unbndl/html";
 import { createViewModel, fromAttributes } from "@unbndl/view";
 import { fromAuth } from "@unbndl/auth";
+import { Store, fromStore } from "@unbndl/store";
 import { NBAData } from "server/models";
+
+import { Model } from "../model.ts";
+import { Msg } from "../messages.ts";
 
 import "../components/nba-card.ts";
 import { NBAElement } from "../components/nba-element.ts";
@@ -15,7 +19,9 @@ interface TeamViewModel {
     authenticated: boolean;
     token?: string;
     teamId?: string;
+    nbaTeamId?: string;
     nbaData?: NBAData;
+    nbaError?: string;
 }
 
 
@@ -28,71 +34,46 @@ export class TeamViewElement extends HTMLElement {
         .with(fromAuth(this), "authenticated", "token")
         .withRenamed(fromAttributes<TeamViewAttributes>(this), {
             teamId: "team-id"
-        });
+        })
+        .with(fromStore<Model>(this), "nbaTeamId", "nbaData", "nbaError");
+
+    view = html<TeamViewModel[]>`
+        <main class="layout">
+            <section class="content">
+                ${($) => NBAElement.renderCard(
+                    $.nbaTeamId === $.teamId ? $.nbaData : undefined
+                )}
+            </section>
+        </main>
+    `;
 
     constructor() {
         super();
 
+        shadow(this)
+            .styles(TeamViewElement.styles)
+            .replace(this.viewModel.render(this.view));
+
         this.viewModel.createEffect(($) => {
-            applyTeamTheme($.nbaData?.id || $.teamId);
+            applyTeamTheme(
+                $.nbaTeamId === $.teamId
+                    ? $.nbaData?.id
+                    : $.teamId
+            );
         });
 
         this.viewModel.createEffect(($) => {
-            if (!$.teamId || !$.token) {
-                this.viewModel.update({
-                    nbaData: undefined,
-                });
-                return;
-            }
+            if (!$.authenticated || !$.teamId || !$.token) return;
+            if ($.nbaTeamId === $.teamId) return;
 
             if (this.requestedTeamId === $.teamId) return;
 
             this.requestedTeamId = $.teamId;
-            this.viewModel.update({ nbaData: undefined });
-
-            fetch(`/api/nba/${$.teamId}`, {
-                headers: {
-                    Authorization: `Bearer ${$.token}`
-                }
-            })
-            .then((response) => {
-                if (response.status !== 200) {
-                    throw new Error(`Server error ${response.status}`);
-                }
-
-                return response.json();
-            })
-            .then((nbaData: NBAData) => {
-                this.viewModel.update({
-                    nbaData,
-                });
-            })
-            .catch((error) => {
-                console.error(`fetching team ${$.teamId} was invalid:`, error);
-                this.requestedTeamId = undefined;
-                this.viewModel.update({
-                    nbaData: undefined
-                });
-            });
+            Store.dispatch<Msg>(this, [
+                "nba/request",
+                { teamid: $.teamId, token: $.token }
+            ]);
         });
-
-        this.viewModel.createEffect(($) => {
-            this.render($.nbaData);
-        });
-    }
-
-    render(nbaData?: NBAData) {
-        const view = NBAElement.renderCard(nbaData);
-
-        shadow(this)
-            .styles(TeamViewElement.styles)
-            .replace(html`
-                <main class="layout">
-                    <section class="content">
-                        ${view}
-                    </section>
-                </main>
-            `);
     }
 
     static styles = css`
