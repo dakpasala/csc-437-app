@@ -1,113 +1,98 @@
 import { css, html, shadow } from "@unbndl/html";
-import { createViewModel } from "@unbndl/view";
+import { createViewModel, fromAttributes } from "@unbndl/view";
 import { fromAuth } from "@unbndl/auth";
-import { fromStore } from "@unbndl/store";
 import { NBAData } from "server/models";
-
-import { Model } from "../model.ts";
-import { Msg } from "../messages.ts";
 
 import "../components/nba-card.ts";
 import { NBAElement } from "../components/nba-element.ts";
 import { applyTeamTheme } from "../team-themes.ts";
 
+type TeamViewAttributes = {
+    "team-id"?: string;
+};
+
 interface TeamViewModel {
     authenticated: boolean;
     token?: string;
-    nbaTeamId?: string;
+    teamId?: string;
     nbaData?: NBAData;
 }
 
-export class TeamViewElement extends HTMLElement {
-    static observedAttributes = ["team-id"];
 
+export class TeamViewElement extends HTMLElement {
     private requestedTeamId?: string;
-    private renderedTeamId?: string;
 
     viewModel = createViewModel<TeamViewModel>({
-        authenticated: false
+        authenticated: false,
     })
         .with(fromAuth(this), "authenticated", "token")
-        .with(fromStore<Model>(this), "nbaTeamId", "nbaData");
+        .withRenamed(fromAttributes<TeamViewAttributes>(this), {
+            teamId: "team-id"
+        });
 
     constructor() {
         super();
 
         this.viewModel.createEffect(($) => {
-            this.requestData($);
+            applyTeamTheme($.nbaData?.id || $.teamId);
         });
 
         this.viewModel.createEffect(($) => {
-            this.renderData($);
-        });
-    }
+            if (!$.teamId || !$.token) {
+                this.viewModel.update({
+                    nbaData: undefined,
+                });
+                return;
+            }
 
-    attributeChangedCallback() {
-        const $ = this.viewModel.toObject();
+            if (this.requestedTeamId === $.teamId) return;
 
-        this.requestData($);
-        this.renderData($);
-    }
+            this.requestedTeamId = $.teamId;
+            this.viewModel.update({ nbaData: undefined });
 
-    get teamId() {
-        return this.getAttribute("team-id") || undefined;
-    }
+            fetch(`/api/nba/${$.teamId}`, {
+                headers: {
+                    Authorization: `Bearer ${$.token}`
+                }
+            })
+            .then((response) => {
+                if (response.status !== 200) {
+                    throw new Error(`Server error ${response.status}`);
+                }
 
-    requestData($: TeamViewModel) {
-        const teamId = this.teamId;
-
-        applyTeamTheme(teamId);
-
-        if (
-            $.authenticated &&
-            $.token &&
-            teamId &&
-            $.nbaTeamId !== teamId &&
-            this.requestedTeamId !== teamId
-        ) {
-            this.requestedTeamId = teamId;
-            this.dispatch([
-                "nba/request",
-                { teamid: teamId, token: $.token }
-            ]);
-        }
-    }
-
-    renderData($: TeamViewModel) {
-        const teamId = this.teamId;
-        const nbaData =
-            $.nbaTeamId === teamId ? $.nbaData : undefined;
-
-        if (this.renderedTeamId !== `${teamId}:${$.nbaTeamId}`) {
-            this.renderedTeamId = `${teamId}:${$.nbaTeamId}`;
-            this.render(nbaData);
-        }
-    }
-
-    dispatch(msg: Msg) {
-        const event = new CustomEvent("store:message", {
-            bubbles: true,
-            composed: true,
-            detail: msg
+                return response.json();
+            })
+            .then((nbaData: NBAData) => {
+                this.viewModel.update({
+                    nbaData,
+                });
+            })
+            .catch((error) => {
+                console.error(`fetching team ${$.teamId} was invalid:`, error);
+                this.requestedTeamId = undefined;
+                this.viewModel.update({
+                    nbaData: undefined
+                });
+            });
         });
 
-        this.dispatchEvent(event);
+        this.viewModel.createEffect(($) => {
+            this.render($.nbaData);
+        });
     }
 
     render(nbaData?: NBAData) {
-        applyTeamTheme(nbaData?.id || this.teamId);
-
         const view = NBAElement.renderCard(nbaData);
 
         shadow(this)
-        .styles(TeamViewElement.styles)
-        .replace(html`
-            <main class="layout">
-                <section class="content">
-                    ${view}
-                </section>
-            </main>
-        `);
+            .styles(TeamViewElement.styles)
+            .replace(html`
+                <main class="layout">
+                    <section class="content">
+                        ${view}
+                    </section>
+                </main>
+            `);
     }
 
     static styles = css`

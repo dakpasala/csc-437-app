@@ -11,7 +11,7 @@ import { NBACardElement } from "./components/nba-card.ts";
 import { NBAElement } from "./components/nba-element.ts";
 import { NBAHeaderElement } from "./components/nba-header.ts";
 import { HomeViewElement } from "./views/home-view.ts";
-import { TeamViewElement } from "./views/team-view.ts";
+import { TeamViewElement } from "./views/team-view-mvu.ts";
 import { applyTeamTheme } from "./team-themes.ts";
 
 const routes: Switch.Route[] = [
