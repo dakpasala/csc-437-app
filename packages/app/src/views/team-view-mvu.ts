@@ -19,23 +19,21 @@ interface TeamViewModel {
     authenticated: boolean;
     token?: string;
     teamId?: string;
+    requestedTeamId?: string;
     nbaTeamId?: string;
     nbaData?: NBAData;
-    nbaError?: string;
 }
 
 
 export class TeamViewElement extends HTMLElement {
-    private requestedTeamId?: string;
-
     viewModel = createViewModel<TeamViewModel>({
-        authenticated: false,
+        authenticated: false
     })
         .with(fromAuth(this), "authenticated", "token")
         .withRenamed(fromAttributes<TeamViewAttributes>(this), {
             teamId: "team-id"
         })
-        .with(fromStore<Model>(this), "nbaTeamId", "nbaData", "nbaError");
+        .with(fromStore<Model>(this), "requestedTeamId", "nbaTeamId", "nbaData");
 
     view = html<TeamViewModel[]>`
         <main class="layout">
@@ -55,20 +53,14 @@ export class TeamViewElement extends HTMLElement {
             .replace(this.viewModel.render(this.view));
 
         this.viewModel.createEffect(($) => {
-            applyTeamTheme(
-                $.nbaTeamId === $.teamId
-                    ? $.nbaData?.id
-                    : $.teamId
-            );
+            applyTeamTheme( $.nbaTeamId === $.teamId ? $.nbaData?.id : $.teamId);
         });
 
         this.viewModel.createEffect(($) => {
             if (!$.authenticated || !$.teamId || !$.token) return;
             if ($.nbaTeamId === $.teamId) return;
+            if ($.requestedTeamId === $.teamId) return;
 
-            if (this.requestedTeamId === $.teamId) return;
-
-            this.requestedTeamId = $.teamId;
             Store.dispatch<Msg>(this, [
                 "nba/request",
                 { teamid: $.teamId, token: $.token }

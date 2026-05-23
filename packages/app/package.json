@@ -14,6 +14,7 @@
   "dependencies": {
     "@unbndl/auth": "^1.0.7",
     "@unbndl/html": "^1.0.7",
+    "@unbndl/service": "^1.0.7",
     "@unbndl/store": "^1.0.7",
     "@unbndl/switch": "^1.0.7",
     "@unbndl/view": "^1.0.7",

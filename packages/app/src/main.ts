@@ -17,6 +17,7 @@ import { applyTeamTheme } from "./team-themes.ts";
 const routes: Switch.Route[] = [
     {
         path: "/app/team/:id",
+        auth: "protected", // added this and it worked??
         view: html<[Switch.Args]>`
             <team-view team-id=${($) => $.params.id}></team-view>
         `
