@@ -13,7 +13,7 @@ export function update(
   message: Msg | Cmd,
   user: Auth.Model
 ): Model | Message.Async<Model, Cmd> {
-  const [type, payload] = message;
+  const [type, payload, callbacks] = message;
 
   switch (type) {
     case "nba/request":
@@ -37,9 +37,14 @@ export function update(
         nbaTeamId: payload.teamid,
         nbaData: payload.nbaData
       };
+    
+    case "nba/save":
+      return [model, saveNBA(payload, user, callbacks)];
 
-    default:
-      throw new Error(`Unhandled message ${type}`);
+    default: {
+      const unhandled: never = type;
+      throw new Error(`Unhandled message ${unhandled}`);
+    }
   }
 }
 
@@ -62,4 +67,47 @@ function requestNBA(
       "nba/load",
       { teamid: payload.teamid, nbaData: json }
     ] as Cmd);
+}
+
+function saveNBA(
+  payload: { teamid: string; nbaData: NBAData; token: string },
+  auth: Auth.Model,
+  callbacks: Message.Reactions
+): Promise<Cmd> {
+  const authHeaders = Auth.headers(auth);
+
+  return fetch(`/api/nba/${payload.teamid}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      ...authHeaders,
+      ...(!authHeaders.Authorization && {
+        Authorization: `Bearer ${payload.token}`
+      })
+    },
+    body: JSON.stringify(payload.nbaData)
+  })
+    .then((response) => {
+      if (response.status !== 200) {
+        throw new Error(
+          `${response.status} status; saving NBA team ${payload.teamid}`
+        );
+      }
+
+      return response.json();
+    })
+    .then((json: NBAData) => {
+      if (json) {
+        callbacks.onSuccess?.();
+        return [
+          "nba/load",
+          { teamid: payload.teamid, nbaData: json }
+        ] as Cmd;
+      }
+      throw new Error(`No JSON in API response`);
+    })
+    .catch((err: Error) => {
+      callbacks.onFailure?.(err);
+      throw err;
+    });
 }

@@ -97,14 +97,12 @@ export class NBAElement extends HTMLElement {
     }
 
     static renderCard(data?: NBAData) {
-        if (!data) {
+        if (!data) 
             return html`<loading>`;
-        }
 
         // had to include this loading thing because something kept getting called leading to an error, so i just threw this in...
 
         const { id, Coach, Conference, Players, Games, Championships } = data;
-        const teamName = getTeamTheme(id).name;
 
         const playerList = Players.map(p =>
             p.href
@@ -113,7 +111,7 @@ export class NBAElement extends HTMLElement {
         );
 
         const gameList = Games.map(g => {
-            const opponent = g.game.split(" vs ")[1];
+            const[teamName, opponent] = g.game.split(" vs ");
 
             return g["opponent-id"]
                 ? html`
