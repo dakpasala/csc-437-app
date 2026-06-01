@@ -20,6 +20,7 @@ type TeamViewMode = "view" | "edit";
 interface TeamViewModel {
     authenticated: boolean;
     mode: TeamViewMode;
+    error?: string;
     token?: string;
     teamId?: string;
     requestedTeamId?: string;
@@ -41,6 +42,8 @@ export class TeamViewElement extends HTMLElement {
 
     currentView = html<TeamViewModel[]>`
         <main class="layout">
+            ${($) => $.error ? html`<p class="error">${$.error}</p>` : ""}
+
             ${($) => $.nbaTeamId === $.teamId && $.nbaData
                 ? $.mode === "edit"
                     ? this.renderEditForm($.nbaData)
@@ -115,10 +118,15 @@ export class TeamViewElement extends HTMLElement {
                     } as NBAData
                 },
                 {
-                    onSuccess: () =>
-                        this.viewModel.set("mode", "view"),
-                    onFailure: (error: Error) =>
-                        console.log("ERROR:", error)
+                    onSuccess: () => {
+                        this.viewModel.set("error", undefined);
+                        this.viewModel.set("mode", "view");
+                    },
+                    onFailure: (error: Error) => {
+                        console.log("ERROR:", error);
+                        this.viewModel.set("error", "Error");
+                        this.viewModel.set("mode", "view");
+                    }
                 }
             ]);
     }
@@ -139,7 +147,10 @@ export class TeamViewElement extends HTMLElement {
             .styles(TeamViewElement.styles)
             .replace(this.viewModel.render(this.currentView))
             .delegate("#edit-mode", {
-                click: () => this.viewModel.set("mode", "edit")
+                click: () => {
+                    this.viewModel.set("error", undefined);
+                    this.viewModel.set("mode", "edit");
+                }
             })
             .delegate("#cancel-edit", {
                 click: () => this.viewModel.set("mode", "view")
@@ -181,6 +192,10 @@ export class TeamViewElement extends HTMLElement {
             display: flex;
             justify-content: flex-end;
             margin-bottom: 1rem;
+        }
+
+        .error {
+            color: red;
         }
 
         .edit-form {

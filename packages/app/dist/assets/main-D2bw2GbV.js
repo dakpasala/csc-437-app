@@ -239,9 +239,11 @@ Expecting `+xt.join(", ")+", got '"+(this.terminals_[N]||N)+"'":zt="Parse error 
         </template>
     `,et.styles=lt``;let ne=et;const At=class At extends HTMLElement{constructor(){super(),this.viewModel=se({authenticated:!1,mode:"view"}).with(ie(this),"authenticated","token").withRenamed(Ge(this),{teamId:"team-id"}).with(Qr(this),"requestedTeamId","nbaTeamId","nbaData"),this.currentView=b`
         <main class="layout">
+            ${t=>t.error?b`<p class="error">${t.error}</p>`:""}
+
             ${t=>t.nbaTeamId===t.teamId&&t.nbaData?t.mode==="edit"?this.renderEditForm(t.nbaData):this.renderMainView(t.nbaData):this.renderLoadingView()}
         </main>
-    `,ft(this).styles(At.styles).replace(this.viewModel.render(this.currentView)).delegate("#edit-mode",{click:()=>this.viewModel.set("mode","edit")}).delegate("#cancel-edit",{click:()=>this.viewModel.set("mode","view")}).listen({submit:t=>this.submitForm(t)}),this.viewModel.createEffect(t=>{var e;Ft(t.nbaTeamId===t.teamId?(e=t.nbaData)==null?void 0:e.id:t.teamId)}),this.viewModel.createEffect(t=>{!t.authenticated||!t.teamId||!t.token||t.nbaTeamId!==t.teamId&&t.requestedTeamId!==t.teamId&&Xt.dispatch(this,["nba/request",{teamid:t.teamId,token:t.token}])})}renderMainView(t){return b`
+    `,ft(this).styles(At.styles).replace(this.viewModel.render(this.currentView)).delegate("#edit-mode",{click:()=>{this.viewModel.set("error",void 0),this.viewModel.set("mode","edit")}}).delegate("#cancel-edit",{click:()=>this.viewModel.set("mode","view")}).listen({submit:t=>this.submitForm(t)}),this.viewModel.createEffect(t=>{var e;Ft(t.nbaTeamId===t.teamId?(e=t.nbaData)==null?void 0:e.id:t.teamId)}),this.viewModel.createEffect(t=>{!t.authenticated||!t.teamId||!t.token||t.nbaTeamId!==t.teamId&&t.requestedTeamId!==t.teamId&&Xt.dispatch(this,["nba/request",{teamid:t.teamId,token:t.token}])})}renderMainView(t){return b`
             <section class="toolbar">
                 <button id="edit-mode" type="button">Edit</button>
             </section>
@@ -273,7 +275,7 @@ Expecting `+xt.join(", ")+", got '"+(this.terminals_[N]||N)+"'":zt="Parse error 
             <section class="content">
                 ${pt.renderCard(void 0)}
             </section>
-        `}submitForm(t){t.preventDefault();const e=t.target,r=this.formDataToJSON(e),s=this.viewModel.$.teamId,i=this.viewModel.$.token,o=this.viewModel.$.nbaData;s&&i&&o&&Xt.dispatch(this,["nba/save",{teamid:s,token:i,nbaData:{...o,...r,id:o.id}},{onSuccess:()=>this.viewModel.set("mode","view"),onFailure:a=>console.log("ERROR:",a)}])}formDataToJSON(t){const r=Array.from(t.elements).filter(s=>s instanceof HTMLInputElement&&s.name).map(s=>[s.name,s.value]);return Object.fromEntries(r)}};At.styles=lt`
+        `}submitForm(t){t.preventDefault();const e=t.target,r=this.formDataToJSON(e),s=this.viewModel.$.teamId,i=this.viewModel.$.token,o=this.viewModel.$.nbaData;s&&i&&o&&Xt.dispatch(this,["nba/save",{teamid:s,token:i,nbaData:{...o,...r,id:o.id}},{onSuccess:()=>{this.viewModel.set("error",void 0),this.viewModel.set("mode","view")},onFailure:a=>{console.log("ERROR:",a),this.viewModel.set("error","Error"),this.viewModel.set("mode","view")}}])}formDataToJSON(t){const r=Array.from(t.elements).filter(s=>s instanceof HTMLInputElement&&s.name).map(s=>[s.name,s.value]);return Object.fromEntries(r)}};At.styles=lt`
         .layout {
             display: grid;
             grid-template-columns: 1fr;
@@ -290,6 +292,10 @@ Expecting `+xt.join(", ")+", got '"+(this.terminals_[N]||N)+"'":zt="Parse error 
             display: flex;
             justify-content: flex-end;
             margin-bottom: 1rem;
+        }
+
+        .error {
+            color: red;
         }
 
         .edit-form {

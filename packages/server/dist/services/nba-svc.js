@@ -15,6 +15,7 @@ const lakersSchema = new mongoose_1.Schema({
         {
             game: String,
             href: String,
+            "opponent-id": String,
         },
     ],
     Championships: [

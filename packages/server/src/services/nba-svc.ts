@@ -18,6 +18,7 @@ const lakersSchema = new Schema<NBAData>(
       {
         game: String,
         href: String,
+        "opponent-id": String,
       },
     ],
 
