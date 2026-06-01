@@ -19,7 +19,10 @@ const routes: Switch.Route[] = [
         path: "/app/team/:id",
         auth: "protected", // added this and it worked??
         view: html<[Switch.Args]>`
-            <team-view team-id=${($) => $.params.id}></team-view>
+            <team-view
+                team-id=${($) => $.params.id}
+                mode=${($) => $.query.get("mode") || "view"}>
+            </team-view>
         `
     },
     {

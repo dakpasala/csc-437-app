@@ -2,6 +2,7 @@ import { css, html, shadow } from "@unbndl/html";
 import { createViewModel, fromAttributes } from "@unbndl/view";
 import { fromAuth } from "@unbndl/auth";
 import { Store, fromStore } from "@unbndl/store";
+import { BrowserHistory } from "@unbndl/switch";
 import { NBAData } from "server/models";
 
 import { Model } from "../model.ts";
@@ -13,6 +14,7 @@ import { applyTeamTheme } from "../team-themes.ts";
 
 type TeamViewAttributes = {
     "team-id"?: string;
+    mode?: TeamViewMode;
 };
 
 type TeamViewMode = "view" | "edit";
@@ -36,7 +38,8 @@ export class TeamViewElement extends HTMLElement {
     })
         .with(fromAuth(this), "authenticated", "token")
         .withRenamed(fromAttributes<TeamViewAttributes>(this), {
-            teamId: "team-id"
+            teamId: "team-id",
+            mode: "mode"
         })
         .with(fromStore<Model>(this), "requestedTeamId", "nbaTeamId", "nbaData");
 
@@ -120,12 +123,12 @@ export class TeamViewElement extends HTMLElement {
                 {
                     onSuccess: () => {
                         this.viewModel.set("error", undefined);
-                        this.viewModel.set("mode", "view");
+                        this.navigateToMode("view");
                     },
                     onFailure: (error: Error) => {
                         console.log("ERROR:", error);
                         this.viewModel.set("error", "Error");
-                        this.viewModel.set("mode", "view");
+                        this.navigateToMode("view");
                     }
                 }
             ]);
@@ -140,6 +143,15 @@ export class TeamViewElement extends HTMLElement {
         return Object.fromEntries(entries);
     }
 
+    navigateToMode(mode: TeamViewMode) {
+        const teamid = this.viewModel.$.teamId;
+
+        if (teamid)
+            BrowserHistory.dispatch(this, "history/navigate", {
+                href: `/app/team/${teamid}?mode=${mode}`
+            });
+    }
+
     constructor() {
         super();
 
@@ -149,11 +161,11 @@ export class TeamViewElement extends HTMLElement {
             .delegate("#edit-mode", {
                 click: () => {
                     this.viewModel.set("error", undefined);
-                    this.viewModel.set("mode", "edit");
+                    this.navigateToMode("edit");
                 }
             })
             .delegate("#cancel-edit", {
-                click: () => this.viewModel.set("mode", "view")
+                click: () => this.navigateToMode("view")
             })
             .listen({
                 submit: (event: Event) => this.submitForm(event)
