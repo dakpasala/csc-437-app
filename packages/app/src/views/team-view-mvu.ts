@@ -86,8 +86,73 @@ export class TeamViewElement extends HTMLElement {
                     <input name="Conference" value=${data.Conference} />
                 </label>
 
+                ${this.renderPlayersEditor(data)}
+                ${this.renderGamesEditor(data)}
+                ${this.renderChampionshipsEditor(data)}
+
                 <button type="submit">Save</button>
             </form>
+        `;
+    }
+
+    renderPlayersEditor(data: NBAData) {
+        return html`
+            <fieldset class="array-editor" data-field="Players">
+                <legend>Players</legend>
+
+                ${data.Players.map((player) => html`
+                    <div class="array-row" data-field="Players">
+                        <input name="Players.player" value=${player.player} />
+                        <input name="Players.href" type="hidden" value=${player.href || ""} />
+                        <button class="remove-item" type="button">Remove</button>
+                    </div>
+                `)}
+
+                <button class="add-item" data-field="Players" type="button">
+                    Add an item
+                </button>
+            </fieldset>
+        `;
+    }
+
+    renderGamesEditor(data: NBAData) {
+        return html`
+            <fieldset class="array-editor" data-field="Games">
+                <legend>Games</legend>
+
+                ${data.Games.map((game) => html`
+                    <div class="array-row" data-field="Games">
+                        <input name="Games.game" value=${game.game} />
+                        <input name="Games.opponentId" type="hidden" value=${game["opponent-id"] || ""} />
+                        <input name="Games.href" type="hidden" value=${game.href || ""} />
+                        <button class="remove-item" type="button">Remove</button>
+                    </div>
+                `)}
+
+                <button class="add-item" data-field="Games" type="button">
+                    Add an item
+                </button>
+            </fieldset>
+        `;
+    }
+
+    renderChampionshipsEditor(data: NBAData) {
+        return html`
+            <fieldset class="array-editor" data-field="Championships">
+                <legend>Championships</legend>
+
+                ${data.Championships.map((championship) => html`
+                    <div class="array-row" data-field="Championships">
+                        <input name="Championships.championship" value=${championship.championship} />
+                        <input name="Championships.href" type="hidden" value=${championship.href || ""} />
+                        <button class="remove-item" type="button">Remove</button>
+                    </div>
+                `)}
+
+                <button class="add-item" data-field="Championships" type="button">
+                    Add an item
+                </button>
+            </fieldset>
         `;
     }
 
@@ -103,7 +168,7 @@ export class TeamViewElement extends HTMLElement {
         ev.preventDefault();
 
         const form = ev.target as HTMLFormElement;
-        const json: object = this.formDataToJSON(form);
+        const json = this.formDataToJSON(form);
         const teamid = this.viewModel.$.teamId;
         const token = this.viewModel.$.token;
         const current = this.viewModel.$.nbaData;
@@ -116,9 +181,13 @@ export class TeamViewElement extends HTMLElement {
                     token,
                     nbaData: {
                         ...current,
-                        ...json,
+                        Coach: json.Coach,
+                        Conference: json.Conference,
+                        Players: this.readPlayers(form),
+                        Games: this.readGames(form),
+                        Championships: this.readChampionships(form),
                         id: current.id
-                    } as NBAData
+                    }
                 },
                 {
                     onSuccess: () => {
@@ -134,13 +203,114 @@ export class TeamViewElement extends HTMLElement {
             ]);
     }
 
-    formDataToJSON(form: HTMLFormElement): object {
+    formDataToJSON(form: HTMLFormElement): Record<string, string> {
         const inputs = Array.from(form.elements).filter(
             (el) => el instanceof HTMLInputElement && el.name
         ) as Array<HTMLInputElement>;
 
         const entries = inputs.map((el) => [el.name, el.value]);
         return Object.fromEntries(entries);
+    }
+
+    readPlayers(form: HTMLFormElement) {
+        return this.rowsFor(form, "Players")
+            .map((row) => {
+                const player = this.inputValue(row, "Players.player");
+                const href = this.inputValue(row, "Players.href");
+
+                return {
+                    player,
+                    ...(href && { href })
+                };
+            })
+            .filter((player) => player.player);
+    }
+
+    readGames(form: HTMLFormElement) {
+        return this.rowsFor(form, "Games")
+            .map((row) => {
+                const game = this.inputValue(row, "Games.game");
+                const opponentId = this.inputValue(row, "Games.opponentId");
+                const href = this.inputValue(row, "Games.href");
+
+                return {
+                    game,
+                    ...(opponentId && { "opponent-id": opponentId }),
+                    ...(href && { href })
+                };
+            })
+            .filter((game) => game.game);
+    }
+
+    readChampionships(form: HTMLFormElement) {
+        return this.rowsFor(form, "Championships")
+            .map((row) => {
+                const championship = this.inputValue(
+                    row,
+                    "Championships.championship"
+                );
+                const href = this.inputValue(row, "Championships.href");
+
+                return {
+                    championship,
+                    ...(href && { href })
+                };
+            })
+            .filter((championship) => championship.championship);
+    }
+
+    rowsFor(form: HTMLFormElement, field: string) {
+        return Array.from(
+            form.querySelectorAll<HTMLElement>(`.array-row[data-field="${field}"]`)
+        );
+    }
+
+    inputValue(row: HTMLElement, name: string) {
+        return row.querySelector<HTMLInputElement>(`input[name="${name}"]`)
+            ?.value.trim() || "";
+    }
+
+    addItem(ev: Event) {
+        const button = ev.target as HTMLElement;
+        const field = button.getAttribute("data-field");
+        const editor = button.closest(".array-editor");
+
+        if (!field || !editor) return;
+
+        editor.insertBefore(this.createArrayRow(field), button);
+    }
+
+    removeItem(ev: Event) {
+        const button = ev.target as HTMLElement;
+        button.closest(".array-row")?.remove();
+    }
+
+    createArrayRow(field: string) {
+        const row = document.createElement("div");
+        row.className = "array-row";
+        row.dataset.field = field;
+
+        const names =
+            field === "Players"
+                ? ["Players.player"]
+                : field === "Games"
+                    ? ["Games.game"]
+                    : ["Championships.championship"];
+
+        names.forEach((name) => {
+            const input = document.createElement("input");
+            input.name = name;
+            input.placeholder = name.split(".")[1];
+            row.append(input);
+        });
+
+        const remove = document.createElement("button");
+        remove.className = "remove-item";
+        remove.type = "button";
+        remove.textContent = "Remove";
+        row.append(remove);
+
+        return row;
     }
 
     navigateToMode(mode: TeamViewMode) {
@@ -166,6 +336,12 @@ export class TeamViewElement extends HTMLElement {
             })
             .delegate("#cancel-edit", {
                 click: () => this.navigateToMode("view")
+            })
+            .delegate(".add-item", {
+                click: (event: Event) => this.addItem(event)
+            })
+            .delegate(".remove-item", {
+                click: (event: Event) => this.removeItem(event)
             })
             .listen({
                 submit: (event: Event) => this.submitForm(event)
@@ -228,6 +404,21 @@ export class TeamViewElement extends HTMLElement {
 
         .edit-form input {
             padding: 0.5rem;
+        }
+
+        .array-editor {
+            display: grid;
+            gap: 0.5rem;
+        }
+
+        .array-row {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 0.5rem;
+        }
+
+        .add-item {
+            width: 100%;
         }
 
         button {
