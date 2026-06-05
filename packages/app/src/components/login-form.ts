@@ -2,8 +2,6 @@ import { css, html, shadow } from "@unbndl/html";
 import { createViewModel, fromInputs } from "@unbndl/view";
 import reset from "./reset.css.js";
 
-
-
 export class LoginFormElement extends HTMLElement {
   viewModel = createViewModel({
     username: "",
@@ -14,7 +12,8 @@ export class LoginFormElement extends HTMLElement {
     "password"
   );
 
-  view = html<[{ username: string; password: string }]>`<form>
+  view = html<[{ username: string; password: string }]>
+    `<form>
       <slot></slot>
       <button type="submit">
         <slot name="submit-label">Login</slot>
@@ -42,7 +41,7 @@ export class LoginFormElement extends HTMLElement {
     console.log("Posting login form:", endpoint, body, event);
     fetch(endpoint, { method, headers, body })
         .then((res) => {
-        if (res.status !== 200)
+        if (res.status !== 200 && res.status !== 201)
             throw `Form submission failed: Status ${res.status}`;
         return res.json();
         })
