@@ -1,1 +1,1 @@
-For some reason,
+For some reason, the app sometimes doesn't work on a chrome profile. I think it's because of chrome extensions of mine, but if data doesn't load, please try using it on incognito.
