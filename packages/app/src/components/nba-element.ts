@@ -59,7 +59,8 @@ export class NBAElement extends HTMLElement {
             color: var(--color-text);
         }
 
-        a {
+        a,
+        a:visited {
             color: var(--color-accent);
             text-decoration: none;
             font-weight: bold;

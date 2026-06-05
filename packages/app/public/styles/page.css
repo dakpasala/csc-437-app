@@ -73,7 +73,8 @@ li {
     color: var(--color-text);
 }
 
-a {
+a,
+a:visited {
     color: var(--color-accent);
     text-decoration: none;
     font-weight: bold;

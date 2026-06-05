@@ -109,7 +109,8 @@ Expecting `+xe.join(", ")+", got '"+(this.terminals_[N]||N)+"'":ze="Parse error 
             color: var(--color-text);
         }
 
-        a {
+        a,
+        a:visited {
             color: var(--color-accent);
             text-decoration: none;
             font-weight: bold;
