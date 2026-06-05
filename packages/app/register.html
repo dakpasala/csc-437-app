@@ -11,13 +11,14 @@
     <link rel="stylesheet" href="/styles/reset.css" />
     <link rel="stylesheet" href="/styles/tokens.css" />
     <link rel="stylesheet" href="/styles/page.css" />
+    <link rel="stylesheet" href="/styles/auth.css" />
 
     <script type="module" src="/src/login.ts"></script>
   </head>
-  <body class="page">
-    <auth-provider>
+  <body class="auth-page">
+    <auth-provider class="auth-shell">
         <h2>User Registration</h2>
-        <main class="card">
+        <main class="auth-card">
             <login-form api="/auth/register">
             <label>
                 <span>Username:</span>

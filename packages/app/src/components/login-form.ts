@@ -28,9 +28,28 @@ export class LoginFormElement extends HTMLElement {
       </button>
     </form>`;
 
+  static styles = css`
+    form {
+      display: grid;
+      gap: 1rem;
+    }
+
+    button {
+      width: fit-content;
+      padding: 0.5rem 1rem;
+      cursor: pointer;
+    }
+
+    .error {
+      color: red;
+      margin: 0;
+    }
+  `;
+
   constructor() {
     super();
     shadow(this)
+      .styles(reset.styles, LoginFormElement.styles)
       .replace(this.viewModel.render(this.view));
 
     this.shadowRoot?.addEventListener("submit", (ev) => {
