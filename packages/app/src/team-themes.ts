@@ -14,7 +14,7 @@ const teamThemes: Record<string, TeamTheme> = {
     hawks: { name: "Atlanta Hawks", lightColor: "#E03A3E", darkColor: "#26282A" },
     celtics: { name: "Boston Celtics", lightColor: "#BA9653", darkColor: "#007A33" },
     nets: { name: "Brooklyn Nets", lightColor: "#FFFFFF", darkColor: "#000000" },
-    hornets: { name: "Charlotte Hornets", lightColor: "#1D1160", darkColor: "#00788C" },
+    hornets: { name: "Charlotte Hornets", lightColor: "#00788C", darkColor: "#1D1160" },
     bulls: { name: "Chicago Bulls", lightColor: "#CE1141", darkColor: "#000000" },
     cavs: { name: "Cleveland Cavaliers", lightColor: "#FFB81C", darkColor: "#6F263D" },
     cavaliers: { name: "Cleveland Cavaliers", lightColor: "#FFB81C", darkColor: "#6F263D" },

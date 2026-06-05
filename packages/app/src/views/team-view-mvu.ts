@@ -376,6 +376,17 @@ export class TeamViewElement extends HTMLElement {
             gap: 1rem;
         }
 
+        a,
+        a:visited {
+            color: currentColor;
+            text-decoration: underline;
+            font-weight: bold;
+        }
+
+        a:hover {
+            color: var(--color-accent);
+        }
+
         .toolbar {
             display: flex;
             justify-content: flex-end;

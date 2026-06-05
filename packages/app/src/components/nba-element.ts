@@ -61,13 +61,13 @@ export class NBAElement extends HTMLElement {
 
         a,
         a:visited {
-            color: var(--color-accent);
-            text-decoration: none;
+            color: currentColor;
+            text-decoration: underline;
             font-weight: bold;
         }
 
         a:hover {
-            text-decoration: underline;
+            color: var(--color-accent);
         }
 
         svg.icon {
